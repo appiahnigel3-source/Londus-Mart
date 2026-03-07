@@ -1,0 +1,277 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wholesale Registration - Londus Mart | Ghana</title>
+    <meta name="description" content="Register your business with Londus Mart for wholesale pricing on imported UK and US groceries.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-contact">
+                    <span><i class="fas fa-phone"></i> 0550078704</span>
+                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a5cccbc3cae5c9cacbc1d0d6c8c4d7d18bc6cac8">[email&#160;protected]</a></span>
+                    <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
+                </div>
+                <div class="header-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                    <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="shop.html" class="nav-link">Shop</a></li>
+                    <li><a href="wholesale.html" class="nav-link active">Wholesale</a></li>
+                    <li><a href="cart.html" class="nav-link">Cart</a></li>
+                    
+                </ul>
+                <div class="nav-actions">
+                    <div class="nav-icon" onclick="toggleSearch()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="cart.html" class="nav-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Wholesale Hero -->
+    <section class="wholesale-hero">
+        <div class="container">
+            <h1 class="shop-title">Wholesale Registration</h1>
+            <div class="shop-breadcrumb">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <span>Wholesale</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wholesale Content -->
+    <section class="wholesale-content">
+        <div class="container">
+            <div class="wholesale-grid">
+                <!-- Info Side -->
+                <div class="wholesale-info">
+                    <h2>Become a Wholesale Partner</h2>
+                    <p>Join Londus Mart's wholesale program and enjoy exclusive bulk pricing on all our imported UK and US products. We serve businesses across Ghana including supermarkets, hotels, restaurants, and retailers.</p>
+                    
+                    <div class="wholesale-benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">💰</div>
+                            <div class="benefit-text">
+                                <h4>Exclusive Wholesale Prices</h4>
+                                <p>Save up to 30% on retail prices with our wholesale pricing</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🚚</div>
+                            <div class="benefit-text">
+                                <h4>Priority Delivery</h4>
+                                <p>Fast delivery to your business location across Ghana</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">📦</div>
+                            <div class="benefit-text">
+                                <h4>Bulk Orders</h4>
+                                <p>Order in bulk and enjoy additional discounts</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">👤</div>
+                            <div class="benefit-text">
+                                <h4>Dedicated Account Manager</h4>
+                                <p>Personal support for all your business needs</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">📋</div>
+                            <div class="benefit-text">
+                                <h4>Flexible Payments</h4>
+                                <p>Net-30 payment terms for approved businesses</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Side -->
+                <div class="wholesale-form-container">
+                    <h2 class="form-title">Business Registration</h2>
+                    <form class="wholesale-form" onsubmit="handleWholesaleSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label">Business Name <span>*</span></label>
+                            <input type="text" class="form-input" name="business-name" required placeholder="Enter your business name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number <span>*</span></label>
+                            <input type="tel" class="form-input" name="phone" required placeholder="e.g., 0241234567">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email Address <span>*</span></label>
+                            <input type="email" class="form-input" name="email" required placeholder="business@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Location in Ghana <span>*</span></label>
+                            <select class="form-select" name="location" required>
+                                <option value="">Select your region</option>
+                                <option value="accra">Greater Accra</option>
+                                <option value="kumasi">Ashanti</option>
+                                <option value="takoradi">Western</option>
+                                <option value="cape-coast">Central</option>
+                                <option value="tamale">Northern</option>
+                                <option value="ho">Volta</option>
+                                <option value="koforidua">Eastern</option>
+                                <option value="sunyani">Bono</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Business Type</label>
+                            <select class="form-select" name="business-type">
+                                <option value="">Select business type</option>
+                                <option value="supermarket">Supermarket</option>
+                                <option value="provision">Provisions Store</option>
+                                <option value="hotel">Hotel/Restaurant</option>
+                                <option value="school">School/Institution</option>
+                                <option value="event">Event Planner</option>
+                                <option value="reseller">Reseller</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Business Description</label>
+                            <textarea class="form-textarea" name="description" placeholder="Tell us about your business and what products you're interested in..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Business Registration Document (Optional)</label>
+                            <label class="form-file">
+                                <input type="file" name="document" accept=".pdf,.jpg,.png">
+                                <div class="file-upload-icon">📁</div>
+                                <div class="file-upload-text">Click to upload or drag and drop</div>
+                                <p style="font-size: 12px; margin-top: 10px; color: #666;">PDF, JPG or PNG (Max 5MB)</p>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="form-submit">Submit Application</button>
+                        
+                        <p class="form-note">We will review your application within 24-48 hours and contact you.</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="products" style="background: var(--light-gray);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Simple steps to start wholesale</p>
+            </div>
+            <div class="why-us-grid">
+                <div class="why-us-card">
+                    <div class="why-us-icon">1</div>
+                    <h3 class="why-us-title">Register</h3>
+                    <p class="why-us-text">Fill out the registration form with your business details</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">2</div>
+                    <h3 class="why-us-title">Verify</h3>
+                    <p class="why-us-text">We verify your business within 24-48 hours</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">3</div>
+                    <h3 class="why-us-title">Approve</h3>
+                    <p class="why-us-text">Get approved and receive wholesale pricing</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">4</div>
+                    <h3 class="why-us-title">Order</h3>
+                    <p class="why-us-text">Start ordering at wholesale prices</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                        <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                    </div>
+                    <p class="footer-text">Your trusted source for quality grocery imports in Ghana.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="wholesale.html">Wholesale</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-contact-section">
+                    <h4 class="footer-title">Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> 0550078704</li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abc2c5cdc4ebc7c4c5cfded8c6cad9df85c8c4c6">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4 class="footer-title">Newsletter</h4>
+                    <p>Subscribe for exclusive offers</p>
+                    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+                        <input type="email" class="newsletter-input" placeholder="Your email">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Londus Mart. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>

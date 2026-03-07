@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Londus Mart | Ghana</title>
+    <meta name="description" content="Londus Mart admin dashboard for managing products, orders, and wholesale accounts.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-contact">
+                    <span><i class="fas fa-phone"></i> 0550078704</span>
+                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8be2e5ede4cbe7e4e5effef8e6eaf9ffa5e8e4e6">[email&#160;protected]</a></span>
+                    <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
+                </div>
+                <div class="header-social">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                    <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="shop.html" class="nav-link">Shop</a></li>
+                    <li><a href="wholesale.html" class="nav-link">Wholesale</a></li>
+                    <li><a href="cart.html" class="nav-link">Cart</a></li>
+                    
+                </ul>
+                <div class="nav-actions">
+                    <div class="nav-icon" onclick="toggleSearch()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="cart.html" class="nav-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Admin Hero -->
+    <section class="admin-hero">
+        <div class="container">
+            <h1 class="shop-title">Admin Dashboard</h1>
+            <div class="shop-breadcrumb">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <span>Admin</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Content -->
+    <section class="admin-content">
+        <div class="container">
+            <div class="admin-layout">
+                <!-- Admin Sidebar -->
+                <aside class="admin-sidebar">
+                    <div class="admin-user">
+                        <div class="admin-avatar">A</div>
+                        <h4>Admin</h4>
+                        <span>Londus Mart</span>
+                    </div>
+                    <nav class="admin-nav">
+                        <div class="admin-nav-item active" onclick="showAdminSection('dashboard')">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="showAdminSection('orders')">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Orders</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="showAdminSection('products')">
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="showAdminSection('wholesale')">
+                            <i class="fas fa-building"></i>
+                            <span>Wholesale</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="showAdminSection('customers')">
+                            <i class="fas fa-users"></i>
+                            <span>Customers</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="showAdminSection('settings')">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="adminLogout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </div>
+                    </nav>
+                </aside>
+
+                <!-- Admin Main -->
+                <main class="admin-main">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard-section">
+                        <div class="admin-header">
+                            <h1 class="admin-title">Dashboard Overview</h1>
+                            <button class="btn btn-primary" onclick="showAdminSection('products')">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon">📦</div>
+                                <div class="stat-info">
+                                    <h3 id="total-orders">3</h3>
+                                    <p>Total Orders</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⏳</div>
+                                <div class="stat-info">
+                                    <h3 id="pending-orders">2</h3>
+                                    <p>Pending Orders</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">💰</div>
+                                <div class="stat-info">
+                                    <h3 id="total-revenue">GHS 525.00</h3>
+                                    <p>Total Revenue</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🏢</div>
+                                <div class="stat-info">
+                                    <h3 id="wholesale-count">1</h3>
+                                    <p>Pending Applications</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Orders -->
+                        <div class="admin-section">
+                            <h2 style="font-size: 24px; color: var(--primary-green); margin-bottom: 20px;">Recent Orders</h2>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Total</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="orders-table-body">
+                                    <!-- Orders will be rendered by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Orders Section -->
+                    <div id="orders-section" style="display: none;">
+                        <div class="admin-header">
+                            <h1 class="admin-title">Orders Management</h1>
+                        </div>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="orders-table-body">
+                                <!-- Orders will be rendered by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Products Section -->
+                    <div id="products-section" style="display: none;">
+                        <div class="admin-header">
+                            <h1 class="admin-title">Products Management</h1>
+                            <button class="btn btn-primary" onclick="showAddProductModal()">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                        </div>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body">
+                                <!-- Products will be rendered by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Wholesale Section -->
+                    <div id="wholesale-section" style="display: none;">
+                        <div class="admin-header">
+                            <h1 class="admin-title">Wholesale Applications</h1>
+                        </div>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Business Name</th>
+                                    <th>Phone</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="wholesale-table-body">
+                                <!-- Wholesale applications will be rendered by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Customers Section -->
+                    <div id="customers-section" style="display: none;">
+                        <div class="admin-header">
+                            <h1 class="admin-title">Customer Management</h1>
+                        </div>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Orders</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>John Doe</td>
+                                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6b010403052b0e060a020745080406">[email&#160;protected]</a></td>
+                                    <td>0241234567</td>
+                                    <td>5</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="table-btn table-btn-edit">View</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Jane Smith</td>
+                                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0dad1ded5f0d5ddd1d9dc9ed3dfdd">[email&#160;protected]</a></td>
+                                    <td>0277654321</td>
+                                    <td>3</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="table-btn table-btn-edit">View</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Settings Section -->
+                    <div id="settings-section" style="display: none;">
+                        <div class="admin-header">
+                            <h1 class="admin-title">Settings</h1>
+                        </div>
+                        <form style="max-width: 600px;">
+                            <div class="form-group">
+                                <label class="form-label">Store Name</label>
+                                <input type="text" class="form-input" value="Londus Mart">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-input" value="0550078704">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" value="info@londusmart.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-input" value="Accra, Ghana">
+                            </div>
+                            <button type="submit" class="btn btn-success">Save Settings</button>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Product Modal -->
+    <div class="modal" id="add-product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Product</h2>
+                <button class="modal-close" onclick="closeAddProductModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-product-form">
+                    <div class="form-group">
+                        <label class="form-label">Product Name *</label>
+                        <input type="text" class="form-input" name="product-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select class="form-select" name="product-category" required>
+                            <option value="">Select category</option>
+                            <option value="uk-imports">UK Imports</option>
+                            <option value="us-imports">US Imports</option>
+                            <option value="beverages">Beverages</option>
+                            <option value="snacks">Snacks</option>
+                            <option value="household">Household</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Price (GHS) *</label>
+                        <input type="number" class="form-input" name="product-price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Wholesale Price (GHS) *</label>
+                        <input type="number" class="form-input" name="product-wholesale" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Origin *</label>
+                        <select class="form-select" name="product-origin" required>
+                            <option value="">Select origin</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="USA">United States</option>
+                            <option value="Ghana">Ghana</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock Quantity</label>
+                        <input type="number" class="form-input" name="product-stock" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" name="product-description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeAddProductModal()">Cancel</button>
+                <button class="btn btn-success" onclick="addProduct()">Add Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                        <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                    </div>
+                    <p class="footer-text">Your trusted source for quality grocery imports in Ghana.</p>
+                </div>
+                <div class="footer-links-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="wholesale.html">Wholesale</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="admin.html">Admin</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact-section">
+                    <h4 class="footer-title">Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> 0550078704</li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="761f181019361a19181203051b1704025815191b">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Londus Mart. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+<script>
+    // ============================================
+    // ADMIN PROTECTION — runs immediately
+    // ============================================
+    (function() {
+        if (sessionStorage.getItem('londus_admin') !== 'true') {
+            window.location.replace('login.html');
+        }
+    })();
+
+    // Logout function
+    function adminLogout() {
+        sessionStorage.removeItem('londus_admin');
+        window.location.href = 'login.html';
+    }
+
+    // Show admin section
+    function showAdminSection(section) {
+        document.querySelectorAll('.admin-main > div').forEach(div => {
+            div.style.display = 'none';
+        });
+        const el = document.getElementById(section + '-section');
+        if (el) el.style.display = 'block';
+
+        document.querySelectorAll('.admin-nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        if (event && event.target) {
+            const navItem = event.target.closest('.admin-nav-item');
+            if (navItem) navItem.classList.add('active');
+        }
+
+        if (section === 'orders') loadAdminOrders();
+        if (section === 'wholesale') loadAdminWholesale();
+        if (section === 'dashboard') loadAdminDashboard();
+        if (section === 'products') loadAdminProducts();
+    }
+
+    // Show add product modal
+    function showAddProductModal() {
+        document.getElementById('add-product-modal').classList.add('active');
+    }
+
+    function closeAddProductModal() {
+        document.getElementById('add-product-modal').classList.remove('active');
+    }
+
+    // ============================================
+    // LOAD DASHBOARD STATS FROM SUPABASE
+    // ============================================
+    async function loadAdminDashboard() {
+        const { data: orders } = await db.from('orders').select('*');
+        const { data: wholesale } = await db.from('wholesale_applications').select('*').eq('status', 'pending');
+        const { data: products } = await db.from('products').select('id');
+
+        const total = orders ? orders.length : 0;
+        const pending = orders ? orders.filter(o => o.status === 'pending').length : 0;
+        const revenue = orders ? orders.reduce((sum, o) => sum + parseFloat(o.total || 0), 0) : 0;
+        const wholesaleCount = wholesale ? wholesale.length : 0;
+
+        const el = id => document.getElementById(id);
+        if (el('total-orders')) el('total-orders').textContent = total;
+        if (el('pending-orders')) el('pending-orders').textContent = pending;
+        if (el('total-revenue')) el('total-revenue').textContent = 'GHS ' + revenue.toFixed(2);
+        if (el('wholesale-count')) el('wholesale-count').textContent = wholesaleCount;
+    }
+
+    // ============================================
+    // LOAD ORDERS FROM SUPABASE
+    // ============================================
+    async function loadAdminOrders() {
+        const tbody = document.querySelector('.orders-table-body');
+        if (!tbody) return;
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;">Loading...</td></tr>';
+
+        const { data: orders, error } = await db.from('orders').select('*').order('created_at', { ascending: false });
+        if (error || !orders || orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">No orders yet.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = orders.map(order => `
+            <tr>
+                <td>#${order.id}</td>
+                <td>${order.phone || 'N/A'}</td>
+                <td>GHS ${parseFloat(order.total || 0).toFixed(2)}</td>
+                <td>${order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</td>
+                <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                <td>
+                    <div class="table-actions">
+                        ${order.status === 'pending' ? `<button class="table-btn table-btn-approve" onclick="approveOrder(${order.id})">Approve</button>` : ''}
+                        <button class="table-btn table-btn-edit" onclick="viewOrderDetails(${order.id})">View</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function approveOrder(orderId) {
+        await db.from('orders').update({ status: 'approved' }).eq('id', orderId);
+        showToast('Order approved!', 'success');
+        loadAdminOrders();
+        loadAdminDashboard();
+    }
+
+    function viewOrderDetails(orderId) {
+        showToast('Order #' + orderId + ' selected', 'success');
+    }
+
+    // ============================================
+    // LOAD WHOLESALE APPLICATIONS FROM SUPABASE
+    // ============================================
+    async function loadAdminWholesale() {
+        const tbody = document.querySelector('.wholesale-table-body');
+        if (!tbody) return;
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;">Loading...</td></tr>';
+
+        const { data: apps, error } = await db.from('wholesale_applications').select('*').order('created_at', { ascending: false });
+        if (error || !apps || apps.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#666;">No applications yet.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = apps.map(app => `
+            <tr>
+                <td>${app.business_name || 'N/A'}</td>
+                <td>${app.phone || 'N/A'}</td>
+                <td>${app.location || 'N/A'}</td>
+                <td><span class="status-badge status-${app.status}">${app.status}</span></td>
+                <td>
+                    <div class="table-actions">
+                        ${app.status === 'pending' ? `
+                            <button class="table-btn table-btn-approve" onclick="approveWholesale(${app.id})">Approve</button>
+                            <button class="table-btn table-btn-delete" onclick="rejectWholesale(${app.id})">Reject</button>
+                        ` : '<span style="color:#666;">Processed</span>'}
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function approveWholesale(id) {
+        await db.from('wholesale_applications').update({ status: 'approved' }).eq('id', id);
+        showToast('Application approved!', 'success');
+        loadAdminWholesale();
+    }
+
+    async function rejectWholesale(id) {
+        await db.from('wholesale_applications').update({ status: 'rejected' }).eq('id', id);
+        showToast('Application rejected.', 'success');
+        loadAdminWholesale();
+    }
+
+    // ============================================
+    // LOAD PRODUCTS FROM SUPABASE
+    // ============================================
+    async function loadAdminProducts() {
+        const container = document.getElementById('products-section');
+        if (!container) return;
+
+        const { data: products } = await db.from('products').select('*').order('created_at', { ascending: false });
+
+        const tableHTML = `
+            <div class="admin-header">
+                <h1 class="admin-title">Products</h1>
+                <button class="btn btn-primary" onclick="showAddProductModal()">
+                    <i class="fas fa-plus"></i> Add Product
+                </button>
+            </div>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Origin</th>
+                        <th>In Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${products && products.length > 0 ? products.map(p => `
+                        <tr>
+                            <td>${p.name}</td>
+                            <td>${p.category || '-'}</td>
+                            <td>GHS ${parseFloat(p.price).toFixed(2)}</td>
+                            <td>${p.origin || '-'}</td>
+                            <td><span class="status-badge ${p.in_stock ? 'status-approved' : 'status-rejected'}">${p.in_stock ? 'Yes' : 'No'}</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="table-btn table-btn-delete" onclick="deleteProduct(${p.id})">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('') : '<tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">No products yet.</td></tr>'}
+                </tbody>
+            </table>
+        `;
+        container.innerHTML = tableHTML;
+    }
+
+    async function deleteProduct(id) {
+        if (!confirm('Are you sure you want to delete this product?')) return;
+        await db.from('products').delete().eq('id', id);
+        showToast('Product deleted.', 'success');
+        loadAdminProducts();
+    }
+
+    // ============================================
+    // ADD PRODUCT TO SUPABASE
+    // ============================================
+    async function addProduct() {
+        const form = document.getElementById('add-product-form');
+        const productData = {
+            name: form.querySelector('[name="product-name"]').value,
+            category: form.querySelector('[name="product-category"]').value,
+            price: parseFloat(form.querySelector('[name="product-price"]').value),
+            wholesale_price: parseFloat(form.querySelector('[name="product-wholesale"]').value),
+            origin: form.querySelector('[name="product-origin"]').value,
+            description: form.querySelector('[name="product-description"]').value,
+            in_stock: true,
+            featured: false,
+            discount: 0
+        };
+
+        const { error } = await db.from('products').insert([productData]);
+        if (error) {
+            showToast('Failed to add product. Try again.', 'error');
+        } else {
+            showToast('Product added successfully!', 'success');
+            closeAddProductModal();
+            form.reset();
+        }
+    }
+
+    // ============================================
+    // INITIALIZE ADMIN PAGE
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+        loadAdminDashboard();
+        updateCartBadge();
+    });
+</script>
+</body>
+</html>

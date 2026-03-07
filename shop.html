@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Londus Mart | Ghana's Premier Grocery Store</title>
+    <meta name="description" content="Browse our wide selection of imported UK and US groceries at Londus Mart Ghana.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-contact">
+                    <span><i class="fas fa-phone"></i> 0550078704</span>
+                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f060109002f0300010b1a1c020e1d1b410c0002">[email&#160;protected]</a></span>
+                    <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
+                </div>
+                <div class="header-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                    <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="shop.html" class="nav-link active">Shop</a></li>
+                    <li><a href="wholesale.html" class="nav-link">Wholesale</a></li>
+                    <li><a href="cart.html" class="nav-link">Cart</a></li>
+                    
+                </ul>
+                <div class="nav-actions">
+                    <div class="nav-icon" onclick="toggleSearch()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="cart.html" class="nav-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Shop Hero -->
+    <section class="shop-hero">
+        <div class="container">
+            <h1 class="shop-title">Shop</h1>
+            <div class="shop-breadcrumb">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <span>Shop</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Content -->
+    <section class="shop-content">
+        <div class="container">
+            <div class="shop-layout">
+                <!-- Sidebar -->
+                <aside class="shop-sidebar">
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">Categories</h3>
+                        <div class="filter-group">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="category-filter" onchange="filterProducts()">
+                                <span>All Categories</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="uk-imports" onchange="filterProducts()">
+                                <span>🇬🇧 UK Imports</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="us-imports" onchange="filterProducts()">
+                                <span>🇺🇸 US Imports</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="beverages" onchange="filterProducts()">
+                                <span>🥤 Beverages</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="snacks" onchange="filterProducts()">
+                                <span>🍿 Snacks</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" value="household" onchange="filterProducts()">
+                                <span>🏠 Household</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">Price Range</h3>
+                        <div class="filter-group">
+                            <div class="price-range">
+                                <input type="number" id="price-min" placeholder="Min" onchange="filterProducts()">
+                                <span>-</span>
+                                <input type="number" id="price-max" placeholder="Max" onchange="filterProducts()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">Origin</h3>
+                        <div class="filter-group">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" onchange="filterProducts()">
+                                <span>🇬🇧 UK</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" onchange="filterProducts()">
+                                <span>🇺🇸 USA</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" onchange="filterProducts()">
+                                <span>🇬🇭 Ghana</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-outline" style="width: 100%;" onclick="resetFilters()">Reset Filters</button>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="shop-main">
+                    <div class="shop-header">
+                        <div class="search-box">
+                            <input type="text" id="search-input" class="search-input" placeholder="Search products..." oninput="filterProducts()">
+                            <button class="search-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div class="shop-sort">
+<span class="products-count">10 products found</span>
+                            <select class="sort-select" onchange="sortProducts(this.value)">
+                                <option value="default">Sort by: Default</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="name">Name: A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid">
+                        <!-- Products will be rendered by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <div class="logo-img"></div>
+                        <div class="logo-text">Londus <span>Mart</span></div>
+                    </div>
+                    <p class="footer-text">Your trusted source for quality grocery imports in Ghana.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="wholesale.html">Wholesale</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-contact-section">
+                    <h4 class="footer-title">Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> 0550078704</li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="94fdfaf2fbd4f8fbfaf0e1e7f9f5e6e0baf7fbf9">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4 class="footer-title">Newsletter</h4>
+                    <p>Subscribe for exclusive offers</p>
+                    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+                        <input type="email" class="newsletter-input" placeholder="Your email">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Londus Mart. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>

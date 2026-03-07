@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Londus Mart - Ghana's Premier Grocery Store | UK & US Imports</title>
+    <meta name="description" content="Londus Mart - Your trusted source for wholesale and retail groceries in Ghana. Importing finest UK and US products.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-contact">
+                    <span><i class="fas fa-phone"></i> 0550078704</span>
+                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93fafdf5fcd3fffcfdf7e6e0fef2e1e7bdf0fcfe">[email&#160;protected]</a></span>
+                    <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
+                </div>
+                <div class="header-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                    <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="shop.html" class="nav-link">Shop</a></li>
+                    <li><a href="wholesale.html" class="nav-link">Wholesale</a></li>
+                    <li><a href="cart.html" class="nav-link">Cart</a></li>
+                    
+                </ul>
+                <div class="nav-actions">
+                    <div class="nav-icon" onclick="toggleSearch()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="cart.html" class="nav-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">🇬🇭 Trusted in Ghana | 🇬🇧 UK & 🇺🇸 Imports</span>
+            <h1 class="hero-title">Your One-Stop Shop for <span>Quality Groceries</span></h1>
+            <p class="hero-subtitle">Discover the finest imported UK and US groceries at competitive wholesale and retail prices. Delivered across Ghana.</p>
+            <div class="hero-buttons">
+                <a href="shop.html" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Shop Retail
+                </a>
+                <a href="wholesale.html" class="btn btn-secondary">
+                    <i class="fas fa-box"></i> Shop Wholesale
+                </a>
+            </div>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">🚚</div>
+                    <div class="hero-feature-text">
+                        <strong>Fast Delivery</strong>
+                        <span>Across Ghana</span>
+                    </div>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">✓</div>
+                    <div class="hero-feature-text">
+                        <strong>Quality Guaranteed</strong>
+                        <span>100% Authentic</span>
+                    </div>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">💰</div>
+                    <div class="hero-feature-text">
+                        <strong>Best Prices</strong>
+                        <span>Wholesale & Retail</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Shop by Category</h2>
+                <p class="section-subtitle">Browse our wide range of imported and local products</p>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card" onclick="filterByCategory('uk-imports')">
+                    <div class="category-icon">🇬🇧</div>
+                    <h3 class="category-name">UK Imports</h3>
+                    <span class="category-count">50+ Products</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('us-imports')">
+                    <div class="category-icon">🇺🇸</div>
+                    <h3 class="category-name">US Imports</h3>
+                    <span class="category-count">45+ Products</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('beverages')">
+                    <div class="category-icon">🥤</div>
+                    <h3 class="category-name">Beverages</h3>
+                    <span class="category-count">30+ Products</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('snacks')">
+                    <div class="category-icon">🍿</div>
+                    <h3 class="category-name">Snacks</h3>
+                    <span class="category-count">40+ Products</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('household')">
+                    <div class="category-icon">🏠</div>
+                    <h3 class="category-name">Household</h3>
+                    <span class="category-count">35+ Products</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Hand-picked premium imports from UK and USA</p>
+            </div>
+            <div class="products-grid">
+                <!-- Products will be rendered by JavaScript -->
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="shop.html" class="btn btn-outline">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-us">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose Londus Mart</h2>
+                <p class="section-subtitle">We deliver quality groceries across Ghana</p>
+            </div>
+            <div class="why-us-grid">
+                <div class="why-us-card">
+                    <div class="why-us-icon">🌍</div>
+                    <h3 class="why-us-title">Ghana's Trusted Source</h3>
+                    <p class="why-us-text">Serving customers across Ghana with premium imported products since 2020.</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">🇬🇧 🇺🇸</div>
+                    <h3 class="why-us-title">Authentic UK & US Imports</h3>
+                    <p class="why-us-text">Direct imports from UK and USA, guaranteeing authenticity and quality.</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">💼</div>
+                    <h3 class="why-us-title">Wholesale & Retail</h3>
+                    <p class="why-us-text">Flexible pricing for both individual shoppers and business customers.</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">🚚</div>
+                    <h3 class="why-us-title">landwide Delivery</h3>
+                    <p class="why-us-text">Fast and reliable delivery to all major cities in Ghana.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What Our Customers Say</h2>
+                <p class="section-subtitle">Join thousands of satisfied customers</p>
+            </div>
+            <div class="testimonials-slider">
+                <!-- Testimonials will be rendered by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="products" style="background: var(--light-gray);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Become a Wholesale Partner</h2>
+                <p class="section-subtitle">Register your business and enjoy exclusive wholesale prices</p>
+            </div>
+            <div style="text-align: center;">
+                <a href="wholesale.html" class="btn btn-success">Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                        <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                    </div>
+                    <p class="footer-text">Your trusted source for quality grocery imports in Ghana. We bring the best of UK and USA directly to your doorstep.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="wholesale.html">Wholesale</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-contact-section">
+                    <h4 class="footer-title">Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> 0550078704</li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6dfd8d0d9f6dad9d8d2c3c5dbd7c4c298d5d9db">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4 class="footer-title">Newsletter</h4>
+                    <p>Subscribe for exclusive offers and updates</p>
+                    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+                        <input type="email" class="newsletter-input" placeholder="Your email">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Londus Mart. All rights reserved. | Made with ❤️ in Ghana</p>
+            </div>
+        </div>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>

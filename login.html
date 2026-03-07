@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Londus Mart</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1E3A8A 0%, #1E2D6B 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-logo {
+            margin-bottom: 10px;
+        }
+
+        .login-logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .login-logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1E3A8A;
+            margin-top: 10px;
+        }
+
+        .login-logo-text span {
+            color: #E63946;
+        }
+
+        .login-subtitle {
+            color: #64748B;
+            margin: 8px 0 35px;
+            font-size: 15px;
+        }
+
+        .pin-label {
+            text-align: left;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 15px;
+        }
+
+        .pin-input-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .pin-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 28px;
+            letter-spacing: 12px;
+            text-align: center;
+            color: #1E3A8A;
+            font-weight: bold;
+            outline: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .pin-input:focus {
+            border-color: #1E3A8A;
+        }
+
+        .pin-input.error {
+            border-color: #E63946;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .toggle-pin {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: #E63946;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .login-btn:hover {
+            background: #C1121F;
+            transform: translateY(-2px);
+        }
+
+        .error-msg {
+            display: none;
+            color: #E63946;
+            font-size: 14px;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 25px;
+            color: #64748B;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #1E3A8A;
+        }
+
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="images/logo.jpg" alt="Londus Mart Logo"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+            <div class="login-logo-text" style="display:none;">Londus <span>Mart</span></div>
+        </div>
+
+        <div class="lock-icon">🔐</div>
+        <div class="login-logo-text">Admin Access</div>
+        <p class="login-subtitle">Enter your PIN to continue</p>
+
+        <label class="pin-label">Admin PIN</label>
+        <div class="pin-input-wrapper">
+            <input
+                type="password"
+                class="pin-input"
+                id="pin-input"
+                maxlength="6"
+                placeholder="••••"
+                inputmode="numeric"
+                onkeydown="if(event.key==='Enter') checkPin()"
+            >
+            <button class="toggle-pin" onclick="togglePinVisibility()" id="toggle-btn">
+                <i class="fas fa-eye" id="eye-icon"></i>
+            </button>
+        </div>
+
+        <button class="login-btn" onclick="checkPin()">
+            <i class="fas fa-sign-in-alt"></i> Enter Dashboard
+        </button>
+
+        <p class="error-msg" id="error-msg">
+            ❌ Incorrect PIN. Please try again.
+        </p>
+
+        <a href="index.html" class="back-link">
+            ← Back to Londus Mart
+        </a>
+    </div>
+
+    <script>
+        // If already logged in, go straight to admin
+        if (sessionStorage.getItem('londus_admin') === 'true') {
+            window.location.href = 'admin.html';
+        }
+
+        function checkPin() {
+            const input = document.getElementById('pin-input');
+            const errorMsg = document.getElementById('error-msg');
+            const correctPin = '3333'; // ← Your secret PIN
+
+            if (input.value === correctPin) {
+                // Save login session
+                sessionStorage.setItem('londus_admin', 'true');
+                input.style.borderColor = '#10B981';
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 400);
+            } else {
+                input.classList.add('error');
+                errorMsg.style.display = 'block';
+                setTimeout(() => {
+                    input.classList.remove('error');
+                    input.value = '';
+                }, 600);
+            }
+        }
+
+        function togglePinVisibility() {
+            const input = document.getElementById('pin-input');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Auto-focus PIN input
+        document.getElementById('pin-input').focus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Londus Mart | Ghana's Premier Grocery Store</title>
+    <meta name="description" content="View your shopping cart and checkout at Londus Mart Ghana.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-contact">
+                    <span><i class="fas fa-phone"></i> 0550078704</span>
+                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2d44434b426d41424349585e404c5f59034e4240">[email&#160;protected]</a></span>
+                    <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
+                </div>
+                <div class="header-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="container">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                    <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="shop.html" class="nav-link">Shop</a></li>
+                    <li><a href="wholesale.html" class="nav-link">Wholesale</a></li>
+                    <li><a href="cart.html" class="nav-link active">Cart</a></li>
+                    
+                </ul>
+                <div class="nav-actions">
+                    <div class="nav-icon" onclick="toggleSearch()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="cart.html" class="nav-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Hero -->
+    <section class="cart-hero">
+        <div class="container">
+            <h1 class="shop-title">Shopping Cart</h1>
+            <div class="shop-breadcrumb">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <span>Cart</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Content -->
+    <section class="cart-content">
+        <div class="container">
+            <div class="cart-grid">
+                <!-- Cart Items -->
+                <div class="cart-items">
+                    <div class="cart-items-container">
+                        <!-- Cart items will be rendered by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <h2 class="summary-title">Order Summary</h2>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span class="summary-subtotal">GHS 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span>Calculated at checkout</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span>GHS 0.00</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span class="total-amount">GHS 0.00</span>
+                    </div>
+
+                    <!-- Checkout Form -->
+                    <form class="checkout-form" onsubmit="handleCheckout(event)">
+                        <div class="checkout-section">
+                            <label class="checkout-label">Delivery Location *</label>
+                            <select class="checkout-select" id="delivery-location" required>
+                                <option value="">Select your region</option>
+                                <option value="accra">Greater Accra - GHS 15</option>
+                                <option value="kumasi">Ashanti Region - GHS 25</option>
+                                <option value="western">Western Region - GHS 30</option>
+                                <option value="central">Central Region - GHS 25</option>
+                                <option value="northern">Northern Region - GHS 45</option>
+                                <option value="volta">Volta Region - GHS 35</option>
+                                <option value="eastern">Eastern Region - GHS 20</option>
+                                <option value="other">Other Regions - GHS 50</option>
+                            </select>
+                        </div>
+
+                        <div class="checkout-section">
+                            <label class="checkout-label">Delivery Address</label>
+                            <input type="text" class="form-input" placeholder="Enter your specific address" required>
+                        </div>
+
+                        <div class="checkout-section">
+                            <label class="checkout-label">Payment Method *</label>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="payment" value="momo" required>
+                                    <span>📱 Mobile Money (MTN/Vodafone/AirtelTigo)</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="payment" value="card">
+                                    <span>💳 Visa / Mastercard</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="payment" value="cod">
+                                    <span>💵 Pay on Delivery</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="checkout-section">
+                            <label class="checkout-label">Phone Number for Payment</label>
+                            <input type="tel" class="form-input" placeholder="e.g., 0241234567">
+                        </div>
+
+                        <button type="submit" class="btn-checkout">Proceed to Checkout</button>
+                    </form>
+
+                    <div style="margin-top: 20px; text-align: center;">
+                        <a href="shop.html" style="color: var(--primary-green);">← Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Shop With Us -->
+    <section class="why-us">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Shop With Us</h2>
+            </div>
+            <div class="why-us-grid">
+                <div class="why-us-card">
+                    <div class="why-us-icon">🚚</div>
+                    <h3 class="why-us-title">Fast Delivery</h3>
+                    <p class="why-us-text">Delivery across Ghana within 2-5 business days</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">🔒</div>
+                    <h3 class="why-us-title">Secure Payment</h3>
+                    <p class="why-us-text">Multiple secure payment options available</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">↩️</div>
+                    <h3 class="why-us-title">Easy Returns</h3>
+                    <p class="why-us-text">30-day return policy on most items</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">📞</div>
+                    <h3 class="why-us-title">24/7 Support</h3>
+                    <p class="why-us-text">We're here to help anytime</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <img src="images/logo.jpg" alt="Londus Mart Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                        <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+                    </div>
+                    <p class="footer-text">Your trusted source for quality grocery imports in Ghana.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="wholesale.html">Wholesale</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-contact-section">
+                    <h4 class="footer-title">Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> 0550078704</li>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f060109002f0300010b1a1c020e1d1b410c0002">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4 class="footer-title">Newsletter</h4>
+                    <p>Subscribe for exclusive offers</p>
+                    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+                        <input type="email" class="newsletter-input" placeholder="Your email">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Londus Mart. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
