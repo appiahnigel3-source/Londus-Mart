@@ -1,9 +1,15 @@
+/* ============================================
+   LONDUS MART - Supabase Integration
+   ============================================ */
 
 const SUPABASE_URL = "https://dwjkusopxpnrmrphdjwh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3amt1c29weHBucm1ycGhkandoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MDE3MjIsImV4cCI6MjA4ODM3NzcyMn0.O1cExLNIo1BjSYzJA6CA34GDzCqEB9sMtZf3onZpkMQ"; // ← REPLACE THIS!
+const SUPABASE_KEY = "YOUR_ANON_PUBLIC_KEY"; // ← REPLACE WITH YOUR REAL KEY
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Make db globally available for admin.html
+window.db = db;
 
 // ============================================
 // FETCH PRODUCTS FROM SUPABASE
@@ -13,20 +19,15 @@ async function fetchProducts(filters = {}) {
     let query = db.from('products').select('*').eq('in_stock', true);
 
     if (filters.category) {
-        // Support both category match AND uk-imports/us-imports parent
         if (filters.category === 'uk-imports' || filters.category === 'us-imports') {
             query = db.from('products').select('*').eq('in_stock', true)
-                .or(`category.eq.${filters.category},category.eq.beverages,category.eq.snacks,category.eq.household`)
                 .eq('origin', filters.category === 'uk-imports' ? 'UK' : 'USA');
         } else {
             query = db.from('products').select('*').eq('in_stock', true).eq('category', filters.category);
         }
     }
 
-    if (filters.search) {
-        query = query.ilike('name', `%${filters.search}%`);
-    }
-
+    if (filters.search) query = query.ilike('name', `%${filters.search}%`);
     if (filters.minPrice) query = query.gte('price', filters.minPrice);
     if (filters.maxPrice) query = query.lte('price', filters.maxPrice);
 
@@ -41,22 +42,17 @@ async function fetchProducts(filters = {}) {
 }
 
 async function fetchFeaturedProducts() {
-    const { data, error } = await db
-        .from('products')
-        .select('*')
-        .eq('in_stock', true)
-        .eq('featured', true)
-        .limit(8);
-    if (error) { console.error('Error:', error); return []; }
-    return data || [];
+    // If no featured products, just get latest 8
+    let { data, error } = await db.from('products').select('*').eq('in_stock', true).eq('featured', true).limit(8);
+    if (error || !data || data.length === 0) {
+        const res = await db.from('products').select('*').eq('in_stock', true).limit(8);
+        return res.data || [];
+    }
+    return data;
 }
 
 async function fetchProductById(id) {
-    const { data, error } = await db
-        .from('products')
-        .select('*')
-        .eq('id', id)
-        .single();
+    const { data, error } = await db.from('products').select('*').eq('id', id).single();
     if (error) { console.error('Error:', error); return null; }
     return data;
 }
@@ -66,9 +62,7 @@ async function fetchProductById(id) {
 // ============================================
 
 async function saveOrder(orderData) {
-    const { data, error } = await db
-        .from('orders')
-        .insert([orderData]);
+    const { error } = await db.from('orders').insert([orderData]);
     if (error) { console.error('Order error:', error); return false; }
     return true;
 }
@@ -78,26 +72,24 @@ async function saveOrder(orderData) {
 // ============================================
 
 async function saveWholesaleApplication(appData) {
-    const { data, error } = await db
-        .from('wholesale_applications')
-        .insert([appData]);
+    const { error } = await db.from('wholesale_applications').insert([appData]);
     if (error) { console.error('Wholesale error:', error); return false; }
     return true;
 }
 
 // ============================================
-// PRODUCT CARD RENDERER
+// PRODUCT CARD RENDERER — Mobile Friendly
 // ============================================
 
 function buildProductCard(product) {
-    const imageUrl = product.image_url || product.image || 
-        `https://via.placeholder.com/300x300/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
-    
+    const imageUrl = product.image_url || product.image ||
+        `https://placehold.co/300x300/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
+
     const price = parseFloat(product.price).toFixed(2);
     const wholesalePrice = product.wholesale_price ? parseFloat(product.wholesale_price).toFixed(2) : null;
     const hasDiscount = product.discount && product.discount > 0;
-    const discountedPrice = hasDiscount 
-        ? (product.price * (1 - product.discount / 100)).toFixed(2) 
+    const discountedPrice = hasDiscount
+        ? (product.price * (1 - product.discount / 100)).toFixed(2)
         : null;
 
     const originFlag = product.origin === 'UK' ? '🇬🇧' : product.origin === 'USA' ? '🇺🇸' : '🇬🇭';
@@ -105,12 +97,13 @@ function buildProductCard(product) {
     return `
         <div class="product-card" data-id="${product.id}" data-category="${product.category}">
             ${hasDiscount ? `<div class="product-badge sale">-${product.discount}%</div>` : ''}
-            <div class="product-image" onclick="viewProduct(${product.id})">
-                <img 
-                    src="${imageUrl}" 
+            <div class="product-image" onclick="viewProduct(${product.id})" style="position:relative;overflow:hidden;aspect-ratio:1/1;">
+                <img
+                    src="${imageUrl}"
                     alt="${product.name}"
-                    onerror="this.src='https://via.placeholder.com/300x300/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}'"
+                    onerror="this.src='https://placehold.co/300x300/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}'"
                     loading="lazy"
+                    style="width:100%;height:100%;object-fit:cover;display:block;"
                 >
                 <div class="product-overlay">
                     <button class="overlay-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
@@ -118,21 +111,21 @@ function buildProductCard(product) {
                     </button>
                 </div>
             </div>
-            <div class="product-info">
-                <div class="product-origin">${originFlag} ${product.origin || ''}</div>
-                <h3 class="product-name" onclick="viewProduct(${product.id})">${product.name}</h3>
-                <p class="product-description">${product.description || ''}</p>
-                <div class="product-price-row">
-                    <div class="product-prices">
-                        ${hasDiscount 
-                            ? `<span class="product-price">GHS ${discountedPrice}</span>
-                               <span class="product-original-price">GHS ${price}</span>`
-                            : `<span class="product-price">GHS ${price}</span>`
+            <div class="product-info" style="padding:12px;">
+                <div class="product-origin" style="font-size:12px;color:#64748B;margin-bottom:4px;">${originFlag} ${product.origin || ''}</div>
+                <h3 class="product-name" onclick="viewProduct(${product.id})" style="font-size:14px;font-weight:600;margin-bottom:4px;cursor:pointer;color:#1E3A8A;">${product.name}</h3>
+                <p class="product-description" style="font-size:12px;color:#64748B;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${product.description || ''}</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;">
+                    <div>
+                        ${hasDiscount
+                            ? `<span style="font-size:16px;font-weight:700;color:#E63946;">GHS ${discountedPrice}</span>
+                               <span style="font-size:12px;text-decoration:line-through;color:#999;margin-left:4px;">GHS ${price}</span>`
+                            : `<span style="font-size:16px;font-weight:700;color:#E63946;">GHS ${price}</span>`
                         }
-                        ${wholesalePrice ? `<span class="product-wholesale-price">Wholesale: GHS ${wholesalePrice}</span>` : ''}
+                        ${wholesalePrice ? `<div style="font-size:11px;color:#1E3A8A;font-weight:500;">Wholesale: GHS ${wholesalePrice}</div>` : ''}
                     </div>
-                    <button class="product-add-btn" onclick="addToCart(${product.id})">
-                        <i class="fas fa-plus"></i>
+                    <button onclick="addToCart(${product.id})" style="background:#E63946;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap;">
+                        <i class="fas fa-plus"></i> Add
                     </button>
                 </div>
             </div>
@@ -148,11 +141,11 @@ async function initHomePage() {
     const grid = document.querySelector('.products .products-grid');
     if (!grid) return;
 
-    grid.innerHTML = '<div class="loading-spinner">Loading products...</div>';
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Loading products...</div>';
     const products = await fetchFeaturedProducts();
 
     if (products.length === 0) {
-        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">No featured products yet. Add some in Supabase!</p>';
+        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">No products yet. Add some in Supabase!</p>';
         return;
     }
     grid.innerHTML = products.map(buildProductCard).join('');
@@ -173,13 +166,13 @@ async function renderShopProducts() {
     const countEl = document.querySelector('.products-count');
     if (!grid) return;
 
-    grid.innerHTML = '<div class="loading-spinner">Loading products...</div>';
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Loading products...</div>';
     const products = await fetchProducts(currentFilters);
 
     if (countEl) countEl.textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
 
     if (products.length === 0) {
-        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">No products found. Try a different filter.</p>';
+        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">No products found.</p>';
         return;
     }
     grid.innerHTML = products.map(buildProductCard).join('');
@@ -221,13 +214,11 @@ async function initProductPage() {
     if (!product) { window.location.href = 'shop.html'; return; }
 
     const imageUrl = product.image_url || product.image ||
-        `https://via.placeholder.com/600x600/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
+        `https://placehold.co/600x600/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
 
-    // Update main image
     const mainImg = document.querySelector('.main-image img');
     if (mainImg) { mainImg.src = imageUrl; mainImg.alt = product.name; }
 
-    // Update page title
     document.title = `${product.name} - Londus Mart`;
 
     const infoContainer = document.querySelector('.product-details-info');
@@ -235,32 +226,28 @@ async function initProductPage() {
 
     const originFlag = product.origin === 'UK' ? '🇬🇧' : product.origin === 'USA' ? '🇺🇸' : '🇬🇭';
     const hasDiscount = product.discount && product.discount > 0;
-    const discountedPrice = hasDiscount 
-        ? (product.price * (1 - product.discount / 100)).toFixed(2) 
+    const discountedPrice = hasDiscount
+        ? (product.price * (1 - product.discount / 100)).toFixed(2)
         : parseFloat(product.price).toFixed(2);
 
     infoContainer.innerHTML = `
-        <div class="product-origin-tag">${originFlag} ${product.origin || ''} Import</div>
-        <h1>${product.name}</h1>
-        <div class="product-price-details">
-            <div>
-                <span class="product-price" style="font-size:32px;color:#E63946;">GHS ${discountedPrice}</span>
-                ${hasDiscount ? `<span class="product-original-price" style="font-size:18px;text-decoration:line-through;color:#999;margin-left:10px;">GHS ${parseFloat(product.price).toFixed(2)}</span>` : ''}
-            </div>
-            ${product.wholesale_price ? `<div style="color:#1E3A8A;font-size:16px;">Wholesale: GHS ${parseFloat(product.wholesale_price).toFixed(2)}</div>` : ''}
+        <div style="font-size:13px;color:#64748B;margin-bottom:8px;">${originFlag} ${product.origin || ''} Import</div>
+        <h1 style="font-size:28px;color:#1E3A8A;margin-bottom:15px;">${product.name}</h1>
+        <div style="margin-bottom:15px;">
+            <span style="font-size:32px;font-weight:700;color:#E63946;">GHS ${discountedPrice}</span>
+            ${hasDiscount ? `<span style="font-size:18px;text-decoration:line-through;color:#999;margin-left:10px;">GHS ${parseFloat(product.price).toFixed(2)}</span>` : ''}
+            ${product.wholesale_price ? `<div style="color:#1E3A8A;font-size:15px;margin-top:5px;">Wholesale: GHS ${parseFloat(product.wholesale_price).toFixed(2)}</div>` : ''}
         </div>
-        <p style="color:#64748B;margin:20px 0;line-height:1.8;">${product.description || 'No description available.'}</p>
-        <div class="product-stock" style="margin:15px 0;">
-            <span style="color:${product.in_stock ? '#10B981' : '#EF4444'};">
-                ${product.in_stock ? '✓ In Stock' : '✗ Out of Stock'}
-            </span>
+        <p style="color:#64748B;margin:15px 0;line-height:1.8;">${product.description || ''}</p>
+        <div style="margin:10px 0;color:${product.in_stock ? '#10B981' : '#EF4444'};font-weight:600;">
+            ${product.in_stock ? '✓ In Stock' : '✗ Out of Stock'}
         </div>
-        <div class="quantity-selector" style="display:flex;align-items:center;gap:15px;margin:20px 0;">
-            <button onclick="updateQuantity(-1)" class="btn btn-outline" style="padding:10px 18px;">−</button>
+        <div style="display:flex;align-items:center;gap:15px;margin:20px 0;">
+            <button onclick="updateQuantity(-1)" class="btn btn-outline" style="padding:8px 16px;">−</button>
             <span id="qty-display" style="font-size:20px;font-weight:bold;">1</span>
-            <button onclick="updateQuantity(1)" class="btn btn-outline" style="padding:10px 18px;">+</button>
+            <button onclick="updateQuantity(1)" class="btn btn-outline" style="padding:8px 16px;">+</button>
         </div>
-        <div style="display:flex;gap:15px;flex-wrap:wrap;margin-top:20px;">
+        <div style="display:flex;gap:15px;flex-wrap:wrap;">
             <button class="btn btn-primary" onclick="addToCartFromDetails(${product.id})">
                 <i class="fas fa-shopping-cart"></i> Add to Cart
             </button>
@@ -273,18 +260,17 @@ async function initProductPage() {
     if (relatedGrid && product.category) {
         const related = await fetchProducts({ category: product.category });
         const others = related.filter(p => p.id != productId).slice(0, 4);
-        relatedGrid.innerHTML = others.length > 0 
-            ? others.map(buildProductCard).join('') 
-            : '<p style="text-align:center;padding:20px;color:#666;">No related products found.</p>';
+        relatedGrid.innerHTML = others.length > 0
+            ? others.map(buildProductCard).join('')
+            : '<p style="text-align:center;padding:20px;color:#666;">No related products.</p>';
     }
 }
 
 // ============================================
-// CART FUNCTIONS (use localStorage + Supabase on checkout)
+// CART FUNCTIONS
 // ============================================
 
 function addToCart(productId) {
-    // productId here is from Supabase (could be int or string)
     let cart = JSON.parse(localStorage.getItem('londusCart')) || [];
     const existing = cart.find(i => i.id == productId);
     if (existing) {
@@ -329,7 +315,7 @@ function updateCartBadge() {
 }
 
 // ============================================
-// PAGE: CART — Render with live Supabase prices
+// PAGE: CART
 // ============================================
 
 async function renderCart() {
@@ -347,20 +333,18 @@ async function renderCart() {
                 <h2 style="color:#1E3A8A;margin-bottom:15px;">Your cart is empty</h2>
                 <a href="shop.html" class="btn btn-primary">Start Shopping</a>
             </div>`;
+        if (subtotalEl) subtotalEl.textContent = 'GHS 0.00';
+        if (totalEl) totalEl.textContent = 'GHS 0.00';
         return;
     }
 
-    container.innerHTML = '<div class="loading-spinner">Loading cart...</div>';
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Loading cart...</div>';
 
-    // Fetch all product details for cart items
     const productPromises = cart.map(item => fetchProductById(item.id));
     const productDetails = await Promise.all(productPromises);
 
     let subtotal = 0;
-    let html = `
-        <div class="cart-header" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:15px;background:#f8fafc;font-weight:600;border-radius:8px;margin-bottom:10px;">
-            <span>Product</span><span>Price</span><span>Quantity</span><span>Total</span>
-        </div>`;
+    let html = '';
 
     cart.forEach((item, index) => {
         const product = productDetails[index];
@@ -371,28 +355,26 @@ async function renderCart() {
         subtotal += lineTotal;
 
         const imageUrl = product.image_url || product.image ||
-            `https://via.placeholder.com/80x80/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
+            `https://placehold.co/80x80/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
 
         html += `
-            <div class="cart-item" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;align-items:center;padding:20px 15px;border-bottom:1px solid #f1f5f9;gap:15px;">
-                <div style="display:flex;align-items:center;gap:15px;">
-                    <img src="${imageUrl}" alt="${product.name}" 
-                         onerror="this.src='https://via.placeholder.com/80x80/1E3A8A/FFFFFF?text=Img'"
-                         style="width:70px;height:70px;object-fit:cover;border-radius:8px;">
-                    <div>
-                        <h4 style="color:#1E3A8A;">${product.name}</h4>
-                        <button onclick="removeFromCart(${product.id})" style="background:none;border:none;color:#E63946;cursor:pointer;font-size:13px;margin-top:5px;">
-                            <i class="fas fa-trash"></i> Remove
-                        </button>
-                    </div>
+            <div style="display:flex;align-items:center;gap:15px;padding:15px;border-bottom:1px solid #f1f5f9;flex-wrap:wrap;">
+                <img src="${imageUrl}" alt="${product.name}"
+                     onerror="this.src='https://placehold.co/80x80/1E3A8A/FFFFFF?text=Img'"
+                     style="width:70px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0;">
+                <div style="flex:1;min-width:150px;">
+                    <h4 style="color:#1E3A8A;margin-bottom:4px;">${product.name}</h4>
+                    <div style="color:#E63946;font-weight:600;">GHS ${price.toFixed(2)}</div>
+                    <button onclick="removeFromCart(${product.id})" style="background:none;border:none;color:#E63946;cursor:pointer;font-size:13px;margin-top:4px;">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
                 </div>
-                <span style="color:#E63946;font-weight:600;">GHS ${price.toFixed(2)}</span>
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <button onclick="updateCartQuantity(${product.id}, -1)" style="width:28px;height:28px;border:1px solid #ddd;background:#fff;border-radius:4px;cursor:pointer;">−</button>
-                    <span style="font-weight:bold;">${item.quantity}</span>
-                    <button onclick="updateCartQuantity(${product.id}, 1)" style="width:28px;height:28px;border:1px solid #ddd;background:#fff;border-radius:4px;cursor:pointer;">+</button>
+                    <button onclick="updateCartQuantity(${product.id}, -1)" style="width:30px;height:30px;border:1px solid #ddd;background:#fff;border-radius:4px;cursor:pointer;font-size:16px;">−</button>
+                    <span style="font-weight:bold;min-width:20px;text-align:center;">${item.quantity}</span>
+                    <button onclick="updateCartQuantity(${product.id}, 1)" style="width:30px;height:30px;border:1px solid #ddd;background:#fff;border-radius:4px;cursor:pointer;font-size:16px;">+</button>
                 </div>
-                <span style="font-weight:600;">GHS ${lineTotal.toFixed(2)}</span>
+                <div style="font-weight:600;color:#1E3A8A;min-width:80px;text-align:right;">GHS ${lineTotal.toFixed(2)}</div>
             </div>`;
     });
 
@@ -416,9 +398,7 @@ function updateCartQuantity(productId, change) {
     const item = cart.find(i => i.id == productId);
     if (item) {
         item.quantity += change;
-        if (item.quantity <= 0) {
-            cart = cart.filter(i => i.id != productId);
-        }
+        if (item.quantity <= 0) cart = cart.filter(i => i.id != productId);
     }
     localStorage.setItem('londusCart', JSON.stringify(cart));
     updateCartBadge();
@@ -426,7 +406,7 @@ function updateCartQuantity(productId, change) {
 }
 
 // ============================================
-// CHECKOUT — Save order to Supabase
+// CHECKOUT
 // ============================================
 
 async function handleCheckout(event) {
@@ -434,10 +414,15 @@ async function handleCheckout(event) {
     const cart = JSON.parse(localStorage.getItem('londusCart')) || [];
     if (cart.length === 0) { showToast('Your cart is empty!', 'error'); return; }
 
-    const location = document.getElementById('delivery-location')?.value;
-    const address = document.querySelector('.checkout-form input[type="text"]')?.value;
-    const phone = document.querySelector('.checkout-form input[type="tel"]')?.value;
-    const payment = document.querySelector('input[name="payment"]:checked')?.value;
+    const locationEl = document.getElementById('delivery-location');
+    const addressEl = document.querySelector('.checkout-form input[type="text"]');
+    const phoneEl = document.querySelector('.checkout-form input[type="tel"]');
+    const paymentEl = document.querySelector('input[name="payment"]:checked');
+
+    if (!locationEl?.value) { showToast('Please select a delivery location!', 'error'); return; }
+    if (!addressEl?.value) { showToast('Please enter your delivery address!', 'error'); return; }
+    if (!phoneEl?.value) { showToast('Please enter your phone number!', 'error'); return; }
+    if (!paymentEl) { showToast('Please select a payment method!', 'error'); return; }
 
     const subtotalEl = document.querySelector('.summary-subtotal');
     const total = subtotalEl ? parseFloat(subtotalEl.textContent.replace('GHS ', '')) : 0;
@@ -445,10 +430,10 @@ async function handleCheckout(event) {
     const orderData = {
         items: cart,
         total: total,
-        delivery_location: location,
-        delivery_address: address,
-        phone: phone,
-        payment_method: payment,
+        delivery_location: locationEl.value,
+        delivery_address: addressEl.value,
+        phone: phoneEl.value,
+        payment_method: paymentEl.value,
         status: 'pending'
     };
 
@@ -460,7 +445,7 @@ async function handleCheckout(event) {
     if (success) {
         localStorage.removeItem('londusCart');
         updateCartBadge();
-        showToast('Order placed successfully! We will contact you shortly.', 'success');
+        showToast('Order placed! We will contact you shortly.', 'success');
         setTimeout(() => window.location.href = 'index.html', 2500);
     } else {
         showToast('Something went wrong. Please try again.', 'error');
@@ -469,7 +454,7 @@ async function handleCheckout(event) {
 }
 
 // ============================================
-// WHOLESALE — Save to Supabase
+// WHOLESALE
 // ============================================
 
 async function handleWholesaleSubmit(event) {
@@ -502,7 +487,7 @@ async function handleWholesaleSubmit(event) {
 }
 
 // ============================================
-// SHARED UTILITIES
+// UTILITIES
 // ============================================
 
 function showToast(message, type = 'success') {
@@ -542,7 +527,7 @@ function toggleSearch() {
 }
 
 // ============================================
-// INITIALIZE — Run correct code per page
+// INITIALIZE
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -550,28 +535,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const page = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
 
-    switch (page) {
-        case '':
-        case 'index':
-            initHomePage();
-            break;
-        case 'shop':
-            // Check URL for category filter
-            const params = new URLSearchParams(window.location.search);
-            const cat = params.get('category');
-            if (cat) currentFilters.category = cat;
-            initShopPage();
-            break;
-        case 'product':
-            initProductPage();
-            break;
-        case 'cart':
-            renderCart();
-            break;
+    if (page === '' || page === 'index') {
+        initHomePage();
+    } else if (page === 'shop') {
+        const params = new URLSearchParams(window.location.search);
+        const cat = params.get('category');
+        if (cat) currentFilters.category = cat;
+        initShopPage();
+    } else if (page === 'product') {
+        initProductPage();
+    } else if (page === 'cart') {
+        renderCart();
     }
 });
 
-// Expose functions globally
+// Expose globally
 window.addToCart = addToCart;
 window.addToCartFromDetails = addToCartFromDetails;
 window.removeFromCart = removeFromCart;
@@ -584,3 +562,4 @@ window.handleCheckout = handleCheckout;
 window.handleWholesaleSubmit = handleWholesaleSubmit;
 window.toggleMobileMenu = toggleMobileMenu;
 window.toggleSearch = toggleSearch;
+window.renderCart = renderCart;

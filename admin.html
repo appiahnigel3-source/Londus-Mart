@@ -15,7 +15,7 @@
             <div class="container">
                 <div class="header-contact">
                     <span><i class="fas fa-phone"></i> 0550078704</span>
-                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8be2e5ede4cbe7e4e5effef8e6eaf9ffa5e8e4e6">[email&#160;protected]</a></span>
+                    <span><i class="fas fa-envelope"></i> info@londusmart.com</span>
                     <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
                 </div>
                 <div class="header-social">
@@ -263,7 +263,7 @@
                                 <tr>
                                     <td>1</td>
                                     <td>John Doe</td>
-                                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6b010403052b0e060a020745080406">[email&#160;protected]</a></td>
+                                    <td>info@londusmart.com</td>
                                     <td>0241234567</td>
                                     <td>5</td>
                                     <td>
@@ -275,7 +275,7 @@
                                 <tr>
                                     <td>2</td>
                                     <td>Jane Smith</td>
-                                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0dad1ded5f0d5ddd1d9dc9ed3dfdd">[email&#160;protected]</a></td>
+                                    <td>info@londusmart.com</td>
                                     <td>0277654321</td>
                                     <td>3</td>
                                     <td>
@@ -367,7 +367,14 @@
                         <label class="form-label">Description</label>
                         <textarea class="form-textarea" name="product-description"></textarea>
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label class="form-label">Product Image URL</label>
+                        <input type="text" class="form-input" name="product-image" placeholder="Paste image URL here e.g. https://...">
+                        <small style="color:#64748B;font-size:12px;margin-top:5px;display:block;">
+                            💡 To get an image URL: Go to Google Images → find your product → right click image → "Open image in new tab" → copy the URL from address bar
+                        </small>
+                    </div>
+</form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeAddProductModal()">Cancel</button>
@@ -401,7 +408,7 @@
                     <h4 class="footer-title">Contact Us</h4>
                     <ul class="footer-contact">
                         <li><i class="fas fa-phone"></i> 0550078704</li>
-                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="761f181019361a19181203051b1704025815191b">[email&#160;protected]</a></li>
+                        <li><i class="fas fa-envelope"></i> info@londusmart.com</li>
                         <li><i class="fas fa-map-marker-alt"></i> Accra, Ghana</li>
                     </ul>
                 </div>
@@ -464,9 +471,9 @@
     // LOAD DASHBOARD STATS FROM SUPABASE
     // ============================================
     async function loadAdminDashboard() {
-        const { data: orders } = await db.from('orders').select('*');
-        const { data: wholesale } = await db.from('wholesale_applications').select('*').eq('status', 'pending');
-        const { data: products } = await db.from('products').select('id');
+        const { data: orders } = await window.window.db.from('orders').select('*');
+        const { data: wholesale } = await window.window.db.from('wholesale_applications').select('*').eq('status', 'pending');
+        const { data: products } = await window.window.db.from('products').select('id');
 
         const total = orders ? orders.length : 0;
         const pending = orders ? orders.filter(o => o.status === 'pending').length : 0;
@@ -488,7 +495,7 @@
         if (!tbody) return;
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;">Loading...</td></tr>';
 
-        const { data: orders, error } = await db.from('orders').select('*').order('created_at', { ascending: false });
+        const { data: orders, error } = await window.window.db.from('orders').select('*').order('created_at', { ascending: false });
         if (error || !orders || orders.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#666;">No orders yet.</td></tr>';
             return;
@@ -512,7 +519,7 @@
     }
 
     async function approveOrder(orderId) {
-        await db.from('orders').update({ status: 'approved' }).eq('id', orderId);
+        await window.window.db.from('orders').update({ status: 'approved' }).eq('id', orderId);
         showToast('Order approved!', 'success');
         loadAdminOrders();
         loadAdminDashboard();
@@ -530,7 +537,7 @@
         if (!tbody) return;
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;">Loading...</td></tr>';
 
-        const { data: apps, error } = await db.from('wholesale_applications').select('*').order('created_at', { ascending: false });
+        const { data: apps, error } = await window.window.db.from('wholesale_applications').select('*').order('created_at', { ascending: false });
         if (error || !apps || apps.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#666;">No applications yet.</td></tr>';
             return;
@@ -555,13 +562,13 @@
     }
 
     async function approveWholesale(id) {
-        await db.from('wholesale_applications').update({ status: 'approved' }).eq('id', id);
+        await window.window.db.from('wholesale_applications').update({ status: 'approved' }).eq('id', id);
         showToast('Application approved!', 'success');
         loadAdminWholesale();
     }
 
     async function rejectWholesale(id) {
-        await db.from('wholesale_applications').update({ status: 'rejected' }).eq('id', id);
+        await window.window.db.from('wholesale_applications').update({ status: 'rejected' }).eq('id', id);
         showToast('Application rejected.', 'success');
         loadAdminWholesale();
     }
@@ -573,7 +580,7 @@
         const container = document.getElementById('products-section');
         if (!container) return;
 
-        const { data: products } = await db.from('products').select('*').order('created_at', { ascending: false });
+        const { data: products } = await window.window.db.from('products').select('*').order('created_at', { ascending: false });
 
         const tableHTML = `
             <div class="admin-header">
@@ -616,7 +623,7 @@
 
     async function deleteProduct(id) {
         if (!confirm('Are you sure you want to delete this product?')) return;
-        await db.from('products').delete().eq('id', id);
+        await window.window.db.from('products').delete().eq('id', id);
         showToast('Product deleted.', 'success');
         loadAdminProducts();
     }
@@ -626,6 +633,7 @@
     // ============================================
     async function addProduct() {
         const form = document.getElementById('add-product-form');
+        const imageUrl = form.querySelector('[name="product-image"]').value.trim();
         const productData = {
             name: form.querySelector('[name="product-name"]').value,
             category: form.querySelector('[name="product-category"]').value,
@@ -633,12 +641,13 @@
             wholesale_price: parseFloat(form.querySelector('[name="product-wholesale"]').value),
             origin: form.querySelector('[name="product-origin"]').value,
             description: form.querySelector('[name="product-description"]').value,
+            image_url: imageUrl || null,
             in_stock: true,
             featured: false,
             discount: 0
         };
 
-        const { error } = await db.from('products').insert([productData]);
+        const { error } = await window.window.db.from('products').insert([productData]);
         if (error) {
             showToast('Failed to add product. Try again.', 'error');
         } else {
