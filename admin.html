@@ -37,6 +37,19 @@
         .table-btn{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;}
         .table-btn-approve{background:#D1FAE5;color:#065F46;}
         .table-btn-delete{background:#FEE2E2;color:#991B1B;}
+        .table-btn-view{background:#EDE9FE;color:#5B21B6;}
+        .table-btn-deliver{background:#DBEAFE;color:#1E40AF;}
+        .table-btn-reject{background:#FEE2E2;color:#991B1B;}
+        .status-delivered{background:#DBEAFE;color:#1E40AF;}
+        .order-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;}
+        .order-modal.active{display:flex;}
+        .order-modal-box{background:white;border-radius:16px;width:92%;max-width:560px;max-height:88vh;overflow-y:auto;}
+        .order-modal-head{background:#1E3A8A;color:white;padding:20px 25px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center;}
+        .order-modal-head h3{font-size:18px;font-weight:700;margin:0;}
+        .order-modal-close{background:none;border:none;color:white;font-size:26px;cursor:pointer;line-height:1;}
+        .order-modal-body{padding:25px;}
+        .order-item-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f1f5f9;}
+        .order-item-row:last-child{border-bottom:none;}
         .table-btn-deliver{background:#DBEAFE;color:#1E40AF;}
         .table-btn-reject{background:#FEE2E2;color:#991B1B;}
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;}
@@ -353,14 +366,14 @@ async function loadOrders() {
             return;
         }
         var rows = orders.map(function(o){
-            var btns = '';
+            var btns = '<button class="table-btn table-btn-view" onclick="viewOrder('+o.id+')" style="margin:2px;">👁 Items</button>';
             if (o.status === 'pending') {
                 btns += '<button class="table-btn table-btn-approve" onclick="approveOrder('+o.id+')" style="margin:2px;">✅ Approve</button>';
                 btns += '<button class="table-btn table-btn-reject" onclick="rejectOrder('+o.id+')" style="margin:2px;">❌ Reject</button>';
             } else if (o.status === 'approved') {
                 btns += '<button class="table-btn table-btn-deliver" onclick="deliverOrder('+o.id+')" style="margin:2px;">🚚 Delivered</button>';
             } else {
-                btns = '<span style="color:#64748B;font-size:12px;">'+o.status+'</span>';
+                btns += '<span style="color:#64748B;font-size:12px;margin-left:4px;">'+o.status+'</span>';
             }
             return '<tr><td>#'+o.id+'</td><td>'+(o.phone||'N/A')+'</td><td>GHS '+parseFloat(o.total||0).toFixed(2)+'</td><td>'+(o.delivery_location||'N/A')+'</td><td>'+(o.created_at?new Date(o.created_at).toLocaleDateString():'N/A')+'</td><td><span class="status-badge status-'+o.status+'">'+o.status+'</span></td><td><div style="display:flex;flex-wrap:wrap;gap:4px;">'+btns+'</div></td></tr>';
         }).join('');
@@ -390,6 +403,68 @@ async function rejectOrder(id) {
     showToast('Order rejected.','success');
     loadOrders();
     loadDashboard();
+}
+
+async function viewOrder(orderId) {
+    document.getElementById('order-details-modal').classList.add('active');
+    document.getElementById('modal-order-title').textContent = 'Order #' + orderId;
+    var body = document.getElementById('modal-order-body');
+    body.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">Loading...</p>';
+    try {
+        var res = await window.db.from('orders').select('*').eq('id', orderId).single();
+        var order = res.data;
+        if (!order) { body.innerHTML = '<p style="color:red;">Order not found.</p>'; return; }
+
+        var items = order.items || [];
+        if (typeof items === 'string') { try { items = JSON.parse(items); } catch(e) { items = []; } }
+
+        var productIds = items.map(function(i){ return i.id || i.product_id; }).filter(Boolean);
+        var products = [];
+        if (productIds.length > 0) {
+            var prodRes = await window.db.from('products').select('*').in('id', productIds);
+            products = prodRes.data || [];
+        }
+
+        var itemsHtml = items.length > 0 ? items.map(function(item) {
+            var pid = item.id || item.product_id;
+            var product = products.find(function(p){ return p.id == pid; });
+            var name = item.name || (product ? product.name : 'Product #' + pid);
+            var price = item.price || (product ? parseFloat(product.price) : 0);
+            var qty = item.quantity || item.qty || 1;
+            var lineTotal = parseFloat(price) * parseInt(qty);
+            return '<div class="order-item-row">' +
+                '<div>' +
+                    '<div style="font-weight:600;color:#1E3A8A;font-size:15px;">' + name + '</div>' +
+                    '<div style="font-size:12px;color:#64748B;margin-top:2px;">GHS ' + parseFloat(price).toFixed(2) + ' each</div>' +
+                '</div>' +
+                '<div style="text-align:right;">' +
+                    '<div style="font-weight:600;color:#334155;">Qty: ' + qty + '</div>' +
+                    '<div style="color:#E63946;font-weight:700;font-size:15px;">GHS ' + lineTotal.toFixed(2) + '</div>' +
+                '</div>' +
+            '</div>';
+        }).join('') : '<p style="color:#64748B;text-align:center;padding:15px;">No item details saved.</p>';
+
+        body.innerHTML =
+            '<div style="background:#f8fafc;border-radius:10px;padding:15px;margin-bottom:20px;">' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:#64748B;">📞 Phone:</span><strong>' + (order.phone||'N/A') + '</strong></div>' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:#64748B;">📍 Location:</span><strong>' + (order.delivery_location||'N/A') + '</strong></div>' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:#64748B;">🏠 Address:</span><strong>' + (order.delivery_address||'N/A') + '</strong></div>' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:#64748B;">💳 Payment:</span><strong>' + (order.payment_method||'N/A') + '</strong></div>' +
+                '<div style="display:flex;justify-content:space-between;"><span style="color:#64748B;">📦 Status:</span><span class="status-badge status-' + order.status + '">' + order.status + '</span></div>' +
+            '</div>' +
+            '<h4 style="color:#1E3A8A;margin-bottom:12px;font-size:16px;font-weight:700;">🛒 Items Ordered</h4>' +
+            itemsHtml +
+            '<div style="margin-top:15px;padding:15px;background:#1E3A8A;border-radius:10px;display:flex;justify-content:space-between;align-items:center;">' +
+                '<strong style="color:white;font-size:16px;">Total</strong>' +
+                '<strong style="color:#fff;font-size:20px;">GHS ' + parseFloat(order.total||0).toFixed(2) + '</strong>' +
+            '</div>';
+    } catch(e) {
+        body.innerHTML = '<p style="color:red;">Error loading order: ' + e.message + '</p>';
+    }
+}
+
+function closeOrderModal() {
+    document.getElementById('order-details-modal').classList.remove('active');
 }
 
 // PRODUCTS
@@ -514,5 +589,15 @@ waitForDb(function() {
 });
 
 </script>
+    <!-- Order Details Modal -->
+    <div class="order-modal" id="order-details-modal">
+        <div class="order-modal-box">
+            <div class="order-modal-head">
+                <h3 id="modal-order-title">Order Details</h3>
+                <button class="order-modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="order-modal-body" id="modal-order-body"></div>
+        </div>
+    </div>
 </body>
 </html>
