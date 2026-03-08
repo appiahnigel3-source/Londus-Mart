@@ -7,539 +7,439 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .admin-layout { display: flex; gap: 30px; }
-        .admin-sidebar { width: 250px; min-width: 250px; background: #1E3A8A; border-radius: 12px; padding: 20px; color: white; }
-        .admin-main { flex: 1; }
-        .admin-avatar { width: 60px; height: 60px; background: #E63946; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: white; margin: 0 auto 10px; }
-        .admin-user { text-align: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 20px; }
-        .admin-user h4 { color: white; font-size: 18px; }
-        .admin-user span { color: rgba(255,255,255,0.7); font-size: 14px; }
-        .admin-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; cursor: pointer; color: rgba(255,255,255,0.8); margin-bottom: 5px; transition: all 0.2s; }
-        .admin-nav-item:hover { background: rgba(255,255,255,0.15); color: white; }
-        .admin-nav-item.active { background: #E63946; color: white; }
-        .admin-nav-item i { width: 20px; }
-        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 15px; }
-        .stat-icon { font-size: 32px; }
-        .stat-info h3 { font-size: 24px; font-weight: 700; color: #1E3A8A; }
-        .stat-info p { color: #64748B; font-size: 13px; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px; }
-        .admin-title { font-size: 24px; color: #1E3A8A; font-weight: 700; }
-        .admin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
-        .admin-table th { background: #1E3A8A; color: white; padding: 14px 16px; text-align: left; font-size: 14px; }
-        .admin-table td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        .admin-table tr:last-child td { border-bottom: none; }
-        .admin-table tr:hover td { background: #f8fafc; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .status-pending { background: #FEF3C7; color: #D97706; }
-        .status-approved { background: #D1FAE5; color: #065F46; }
-        .status-rejected { background: #FEE2E2; color: #991B1B; }
-        .table-actions { display: flex; gap: 8px; }
-        .table-btn { padding: 5px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-        .table-btn-approve { background: #D1FAE5; color: #065F46; }
-        .table-btn-delete { background: #FEE2E2; color: #991B1B; }
-        .table-btn-edit { background: #DBEAFE; color: #1E40AF; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
-        .modal.active { display: flex; }
-        .modal-content { background: white; border-radius: 16px; width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { padding: 20px 25px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-        .modal-title { font-size: 20px; color: #1E3A8A; font-weight: 700; }
-        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #64748B; }
-        .modal-body { padding: 25px; }
-        .modal-footer { padding: 20px 25px; border-top: 1px solid #f1f5f9; display: flex; gap: 10px; justify-content: flex-end; }
-        .form-group { margin-bottom: 18px; }
-        .form-label { display: block; font-weight: 600; color: #334155; margin-bottom: 6px; font-size: 14px; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; transition: border 0.2s; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #1E3A8A; }
-        .form-textarea { min-height: 80px; resize: vertical; }
-        .section-hidden { display: none; }
-        @media (max-width: 768px) {
-            .admin-layout { flex-direction: column; }
-            .admin-sidebar { width: 100%; min-width: unset; }
-            .admin-stats { grid-template-columns: repeat(2, 1fr); }
-        }
+        .admin-layout{display:flex;gap:30px;}
+        .admin-sidebar{width:250px;min-width:250px;background:#1E3A8A;border-radius:12px;padding:20px;color:white;height:fit-content;}
+        .admin-avatar{width:60px;height:60px;background:#E63946;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;color:white;margin:0 auto 10px;}
+        .admin-user{text-align:center;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.2);margin-bottom:20px;}
+        .admin-user h4{color:white;font-size:18px;margin-bottom:4px;}
+        .admin-user span{color:rgba(255,255,255,0.7);font-size:13px;}
+        .admin-nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,0.8);margin-bottom:5px;transition:all 0.2s;}
+        .admin-nav-item:hover{background:rgba(255,255,255,0.15);color:white;}
+        .admin-nav-item.active{background:#E63946;color:white;}
+        .admin-nav-item i{width:18px;}
+        .admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:25px;}
+        .stat-card{background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.08);display:flex;align-items:center;gap:15px;}
+        .stat-icon{font-size:30px;}
+        .stat-info h3{font-size:22px;font-weight:700;color:#1E3A8A;}
+        .stat-info p{color:#64748B;font-size:12px;}
+        .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+        .admin-title{font-size:22px;color:#1E3A8A;font-weight:700;}
+        .admin-table{width:100%;border-collapse:collapse;font-size:14px;}
+        .admin-table th{background:#1E3A8A;color:white;padding:12px 14px;text-align:left;}
+        .admin-table td{padding:12px 14px;border-bottom:1px solid #f1f5f9;}
+        .admin-table tr:last-child td{border-bottom:none;}
+        .admin-table tr:hover td{background:#f8fafc;}
+        .status-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+        .status-pending{background:#FEF3C7;color:#D97706;}
+        .status-approved{background:#D1FAE5;color:#065F46;}
+        .status-rejected{background:#FEE2E2;color:#991B1B;}
+        .table-btn{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;}
+        .table-btn-approve{background:#D1FAE5;color:#065F46;}
+        .table-btn-delete{background:#FEE2E2;color:#991B1B;}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;}
+        .modal.active{display:flex;}
+        .modal-content{background:white;border-radius:16px;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;}
+        .modal-header{padding:20px 25px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;}
+        .modal-title{font-size:18px;color:#1E3A8A;font-weight:700;}
+        .modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:#64748B;}
+        .modal-body{padding:20px 25px;}
+        .modal-footer{padding:15px 25px;border-top:1px solid #f1f5f9;display:flex;gap:10px;justify-content:flex-end;}
+        .form-group{margin-bottom:15px;}
+        .form-label{display:block;font-weight:600;color:#334155;margin-bottom:5px;font-size:13px;}
+        .form-input,.form-select,.form-textarea{width:100%;padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:14px;outline:none;box-sizing:border-box;}
+        .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#1E3A8A;}
+        .form-textarea{min-height:70px;resize:vertical;}
+        .toast-container{position:fixed;bottom:20px;right:20px;z-index:99999;}
+        .toast{padding:12px 20px;border-radius:8px;margin-top:8px;font-size:14px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.2);color:white;}
+        .toast.success{background:#10B981;}
+        .toast.error{background:#EF4444;}
+        @media(max-width:768px){.admin-layout{flex-direction:column;}.admin-sidebar{width:100%;min-width:unset;}.admin-stats{grid-template-columns:repeat(2,1fr);}}
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-top">
-            <div class="container">
-                <div class="header-contact">
-                    <span><i class="fas fa-phone"></i> 0550078704</span>
-                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="97fef9f1f8d7fbf8f9f3e2e4faf6e5e3b9f4f8fa">[email&#160;protected]</a></span>
-                    <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
-                </div>
-            </div>
-        </div>
-        <nav class="navbar">
-            <div class="container">
-                <a href="index.html" class="logo">
-                    <img src="images/logo.jpg" alt="Londus Mart" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
-                    <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+
+<header class="header">
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.jpg" alt="Londus Mart" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                <div class="logo-text" style="display:none;">Londus <span>Mart</span></div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="shop.html" class="nav-link">Shop</a></li>
+                <li><a href="cart.html" class="nav-link">Cart</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="nav-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">0</span>
                 </a>
-                <ul class="nav-menu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="shop.html" class="nav-link">Shop</a></li>
-                    <li><a href="cart.html" class="nav-link">Cart</a></li>
-                </ul>
-                <div class="nav-actions">
-                    <a href="cart.html" class="nav-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge">0</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <section style="background:#1E3A8A;padding:30px 0;color:white;">
-        <div class="container">
-            <h1 style="font-size:28px;font-weight:700;">Admin Dashboard</h1>
-            <p style="opacity:0.8;margin-top:5px;">Manage your store</p>
-        </div>
-    </section>
-
-    <section style="padding:40px 0;background:#f8fafc;min-height:80vh;">
-        <div class="container">
-            <div class="admin-layout">
-
-                <!-- Sidebar -->
-                <aside class="admin-sidebar">
-                    <div class="admin-user">
-                        <div class="admin-avatar">A</div>
-                        <h4>Admin</h4>
-                        <span>Londus Mart</span>
-                    </div>
-                    <nav class="admin-nav">
-                        <div class="admin-nav-item active" id="nav-dashboard" onclick="switchSection('dashboard')">
-                            <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
-                        </div>
-                        <div class="admin-nav-item" id="nav-orders" onclick="switchSection('orders')">
-                            <i class="fas fa-shopping-cart"></i><span>Orders</span>
-                        </div>
-                        <div class="admin-nav-item" id="nav-products" onclick="switchSection('products')">
-                            <i class="fas fa-box"></i><span>Products</span>
-                        </div>
-                        <div class="admin-nav-item" id="nav-wholesale" onclick="switchSection('wholesale')">
-                            <i class="fas fa-building"></i><span>Wholesale</span>
-                        </div>
-                        <div class="admin-nav-item" id="nav-settings" onclick="switchSection('settings')">
-                            <i class="fas fa-cog"></i><span>Settings</span>
-                        </div>
-                        <div class="admin-nav-item" onclick="doLogout()">
-                            <i class="fas fa-sign-out-alt"></i><span>Logout</span>
-                        </div>
-                    </nav>
-                </aside>
-
-                <!-- Main Content -->
-                <main style="flex:1;">
-
-                    <!-- DASHBOARD -->
-                    <div id="section-dashboard">
-                        <div class="admin-header">
-                            <h2 class="admin-title">Dashboard Overview</h2>
-                            <button class="btn btn-primary" onclick="switchSection('products')">
-                                <i class="fas fa-plus"></i> Add Product
-                            </button>
-                        </div>
-                        <div class="admin-stats">
-                            <div class="stat-card">
-                                <div class="stat-icon">📦</div>
-                                <div class="stat-info"><h3 id="stat-total-orders">...</h3><p>Total Orders</p></div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">⏳</div>
-                                <div class="stat-info"><h3 id="stat-pending-orders">...</h3><p>Pending Orders</p></div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">💰</div>
-                                <div class="stat-info"><h3 id="stat-revenue">...</h3><p>Total Revenue</p></div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">🏢</div>
-                                <div class="stat-info"><h3 id="stat-wholesale">...</h3><p>Wholesale Apps</p></div>
-                            </div>
-                        </div>
-                        <div style="background:white;border-radius:12px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
-                            <h3 style="color:#1E3A8A;margin-bottom:20px;font-size:18px;">Recent Orders</h3>
-                            <div id="dashboard-recent-orders">Loading...</div>
-                        </div>
-                    </div>
-
-                    <!-- ORDERS -->
-                    <div id="section-orders" class="section-hidden">
-                        <div class="admin-header">
-                            <h2 class="admin-title">Orders Management</h2>
-                            <button class="btn btn-outline" onclick="loadOrders()" style="margin-left:auto;"><i class="fas fa-sync"></i> Refresh</button>
-                        </div>
-                        <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
-                            <div id="orders-content" style="padding:20px;">Loading...</div>
-                        </div>
-                    </div>
-
-                    <!-- PRODUCTS -->
-                    <div id="section-products" class="section-hidden">
-                        <div class="admin-header">
-                            <h2 class="admin-title">Products</h2>
-                            <button class="btn btn-primary" onclick="openAddProduct()">
-                                <i class="fas fa-plus"></i> Add Product
-                            </button>
-                        </div>
-                        <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
-                            <div id="products-content" style="padding:20px;">Loading...</div>
-                        </div>
-                    </div>
-
-                    <!-- WHOLESALE -->
-                    <div id="section-wholesale" class="section-hidden">
-                        <div class="admin-header">
-                            <h2 class="admin-title">Wholesale Applications</h2>
-                        </div>
-                        <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
-                            <div id="wholesale-content" style="padding:20px;">Loading...</div>
-                        </div>
-                    </div>
-
-                    <!-- SETTINGS -->
-                    <div id="section-settings" class="section-hidden">
-                        <div class="admin-header">
-                            <h2 class="admin-title">Settings</h2>
-                        </div>
-                        <div style="background:white;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,0.08);max-width:600px;">
-                            <div class="form-group">
-                                <label class="form-label">Store Name</label>
-                                <input type="text" class="form-input" value="Londus Mart">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Phone</label>
-                                <input type="tel" class="form-input" value="0550078704">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-input" value="info@londusmart.com">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Address</label>
-                                <input type="text" class="form-input" value="Accra, Ghana">
-                            </div>
-                            <button class="btn btn-success" onclick="showToast('Settings saved!','success')">Save Settings</button>
-                        </div>
-                    </div>
-
-                </main>
             </div>
         </div>
-    </section>
+    </nav>
+</header>
 
-    <!-- ADD PRODUCT MODAL -->
-    <div class="modal" id="add-product-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Add New Product</h2>
-                <button class="modal-close" onclick="closeAddProduct()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Product Name *</label>
-                    <input type="text" class="form-input" id="p-name" placeholder="e.g. Heinz Ketchup">
+<section style="background:#1E3A8A;padding:25px 0;color:white;">
+    <div class="container">
+        <h1 style="font-size:26px;font-weight:700;">Admin Dashboard</h1>
+        <p style="opacity:0.75;font-size:14px;margin-top:4px;">Manage your Londus Mart store</p>
+    </div>
+</section>
+
+<section style="padding:30px 0;background:#f8fafc;min-height:80vh;">
+    <div class="container">
+        <div class="admin-layout">
+
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <h4>Admin</h4>
+                    <span>Londus Mart</span>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Category *</label>
-                    <select class="form-select" id="p-category">
-                        <option value="">Select category</option>
-                        <option value="uk-imports">UK Imports</option>
-                        <option value="us-imports">US Imports</option>
-                        <option value="beverages">Beverages</option>
-                        <option value="snacks">Snacks</option>
-                        <option value="household">Household</option>
-                    </select>
+                <nav>
+                    <div class="admin-nav-item active" id="nav-dashboard" onclick="switchSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+                    </div>
+                    <div class="admin-nav-item" id="nav-orders" onclick="switchSection('orders')">
+                        <i class="fas fa-shopping-cart"></i><span>Orders</span>
+                    </div>
+                    <div class="admin-nav-item" id="nav-products" onclick="switchSection('products')">
+                        <i class="fas fa-box"></i><span>Products</span>
+                    </div>
+                    <div class="admin-nav-item" id="nav-wholesale" onclick="switchSection('wholesale')">
+                        <i class="fas fa-building"></i><span>Wholesale</span>
+                    </div>
+                    <div class="admin-nav-item" id="nav-settings" onclick="switchSection('settings')">
+                        <i class="fas fa-cog"></i><span>Settings</span>
+                    </div>
+                    <div class="admin-nav-item" onclick="doLogout()">
+                        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Main -->
+            <main style="flex:1;min-width:0;">
+
+                <!-- DASHBOARD -->
+                <div id="section-dashboard">
+                    <div class="admin-header">
+                        <h2 class="admin-title">Dashboard Overview</h2>
+                        <button class="btn btn-primary" onclick="switchSection('products')">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                    </div>
+                    <div class="admin-stats">
+                        <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-info"><h3 id="stat-total">-</h3><p>Total Orders</p></div></div>
+                        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-info"><h3 id="stat-pending">-</h3><p>Pending</p></div></div>
+                        <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-info"><h3 id="stat-revenue">-</h3><p>Revenue</p></div></div>
+                        <div class="stat-card"><div class="stat-icon">🏢</div><div class="stat-info"><h3 id="stat-wholesale">-</h3><p>Wholesale Apps</p></div></div>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
+                        <h3 style="color:#1E3A8A;margin-bottom:15px;font-size:16px;">Recent Orders</h3>
+                        <div id="dash-orders">Loading...</div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Price (GHS) *</label>
-                    <input type="number" class="form-input" id="p-price" step="0.01" placeholder="e.g. 25.00">
+
+                <!-- ORDERS -->
+                <div id="section-orders" style="display:none;">
+                    <div class="admin-header">
+                        <h2 class="admin-title">Orders</h2>
+                        <button class="btn btn-outline" onclick="loadOrders()"><i class="fas fa-sync"></i> Refresh</button>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
+                        <div id="orders-content">Loading...</div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Wholesale Price (GHS)</label>
-                    <input type="number" class="form-input" id="p-wholesale" step="0.01" placeholder="e.g. 20.00">
+
+                <!-- PRODUCTS -->
+                <div id="section-products" style="display:none;">
+                    <div class="admin-header">
+                        <h2 class="admin-title">Products</h2>
+                        <button class="btn btn-primary" onclick="openAddProduct()"><i class="fas fa-plus"></i> Add Product</button>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
+                        <div id="products-content">Loading...</div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Origin *</label>
-                    <select class="form-select" id="p-origin">
-                        <option value="">Select origin</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="USA">United States</option>
-                        <option value="Ghana">Ghana</option>
-                    </select>
+
+                <!-- WHOLESALE -->
+                <div id="section-wholesale" style="display:none;">
+                    <div class="admin-header">
+                        <h2 class="admin-title">Wholesale Applications</h2>
+                        <button class="btn btn-outline" onclick="loadWholesale()"><i class="fas fa-sync"></i> Refresh</button>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
+                        <div id="wholesale-content">Loading...</div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" id="p-description" placeholder="Brief product description"></textarea>
+
+                <!-- SETTINGS -->
+                <div id="section-settings" style="display:none;">
+                    <div class="admin-header">
+                        <h2 class="admin-title">Settings</h2>
+                    </div>
+                    <div style="background:white;border-radius:12px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,0.08);max-width:500px;">
+                        <div class="form-group"><label class="form-label">Store Name</label><input type="text" class="form-input" value="Londus Mart"></div>
+                        <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" value="0550078704"></div>
+                        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" value="info@londusmart.com"></div>
+                        <div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" value="Accra, Ghana"></div>
+                        <button class="btn btn-success" onclick="showToast('Settings saved!','success')">Save Settings</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Product Image URL</label>
-                    <input type="text" class="form-input" id="p-image" placeholder="https://...">
-                    <small style="color:#64748B;font-size:12px;margin-top:5px;display:block;">
-                        💡 Google Images → right click product image → "Open image in new tab" → copy the URL
-                    </small>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeAddProduct()">Cancel</button>
-                <button class="btn btn-success" id="save-product-btn" onclick="saveProduct()">Add Product</button>
-            </div>
+
+            </main>
         </div>
     </div>
+</section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2025 Londus Mart. All rights reserved.</p>
+<!-- ADD PRODUCT MODAL -->
+<div class="modal" id="add-product-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Add New Product</h2>
+            <button class="modal-close" onclick="closeAddProduct()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group"><label class="form-label">Product Name *</label><input type="text" class="form-input" id="p-name" placeholder="e.g. Heinz Ketchup"></div>
+            <div class="form-group">
+                <label class="form-label">Category *</label>
+                <select class="form-select" id="p-category">
+                    <option value="">Select category</option>
+                    <option value="uk-imports">UK Imports</option>
+                    <option value="us-imports">US Imports</option>
+                    <option value="beverages">Beverages</option>
+                    <option value="snacks">Snacks</option>
+                    <option value="household">Household</option>
+                </select>
+            </div>
+            <div class="form-group"><label class="form-label">Price (GHS) *</label><input type="number" class="form-input" id="p-price" step="0.01" placeholder="25.00"></div>
+            <div class="form-group"><label class="form-label">Wholesale Price (GHS)</label><input type="number" class="form-input" id="p-wholesale" step="0.01" placeholder="20.00"></div>
+            <div class="form-group">
+                <label class="form-label">Origin *</label>
+                <select class="form-select" id="p-origin">
+                    <option value="">Select origin</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="USA">United States</option>
+                    <option value="Ghana">Ghana</option>
+                </select>
+            </div>
+            <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="p-desc" placeholder="Brief product description"></textarea></div>
+            <div class="form-group">
+                <label class="form-label">Product Image URL</label>
+                <input type="text" class="form-input" id="p-image" placeholder="https://...">
+                <small style="color:#64748B;font-size:12px;margin-top:4px;display:block;">💡 Google Images → right click product → "Open image in new tab" → copy URL</small>
             </div>
         </div>
-    </footer>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeAddProduct()">Cancel</button>
+            <button class="btn btn-success" id="save-btn" onclick="saveProduct()">Add Product</button>
+        </div>
+    </div>
+</div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<div class="toast-container"></div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-bottom"><p>&copy; 2025 Londus Mart. All rights reserved.</p></div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 <script>
 
-// ── PROTECTION ──────────────────────────────────────────
+// PIN PROTECTION
 (function() {
     if (sessionStorage.getItem('londus_admin') !== 'true') {
         window.location.replace('login.html');
     }
 })();
 
-// ── LOGOUT ──────────────────────────────────────────────
+// LOGOUT
 function doLogout() {
     sessionStorage.removeItem('londus_admin');
     window.location.href = 'login.html';
 }
 
-// ── SWITCH SECTION ──────────────────────────────────────
+// TOAST
+function showToast(msg, type) {
+    var c = document.querySelector('.toast-container');
+    var t = document.createElement('div');
+    t.className = 'toast ' + (type || 'success');
+    t.textContent = (type === 'success' ? '✓ ' : '⚠ ') + msg;
+    c.appendChild(t);
+    setTimeout(function() { t.remove(); }, 3500);
+}
+
+// SWITCH SECTION
+var sections = ['dashboard','orders','products','wholesale','settings'];
+
 function switchSection(name) {
-    // Hide all sections
-    ['dashboard','orders','products','wholesale','settings'].forEach(function(s) {
+    sections.forEach(function(s) {
         var el = document.getElementById('section-' + s);
-        if (el) el.style.display = 'none';
-    });
-
-    // Show selected
-    var target = document.getElementById('section-' + name);
-    if (target) target.style.display = 'block';
-
-    // Update nav active state
-    ['dashboard','orders','products','wholesale','settings'].forEach(function(s) {
         var nav = document.getElementById('nav-' + s);
+        if (el) el.style.display = 'none';
         if (nav) nav.classList.remove('active');
     });
+    var target = document.getElementById('section-' + name);
     var activeNav = document.getElementById('nav-' + name);
+    if (target) target.style.display = 'block';
     if (activeNav) activeNav.classList.add('active');
 
-    // Load data for section
     if (name === 'dashboard') loadDashboard();
     else if (name === 'orders') loadOrders();
     else if (name === 'products') loadProducts();
     else if (name === 'wholesale') loadWholesale();
 }
 
-// ── TOAST ────────────────────────────────────────────────
-function showToast(msg, type) {
-    var container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container';
-        container.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:99999;';
-        document.body.appendChild(container);
+// WAIT FOR DB THEN START
+function waitForDb(callback) {
+    if (window.db) {
+        callback();
+    } else {
+        console.log('Waiting for Supabase db...');
+        setTimeout(function() { waitForDb(callback); }, 150);
     }
-    var toast = document.createElement('div');
-    toast.style.cssText = 'background:' + (type === 'success' ? '#10B981' : '#EF4444') + ';color:white;padding:12px 20px;border-radius:8px;margin-top:8px;font-size:14px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
-    toast.textContent = (type === 'success' ? '✓ ' : '⚠ ') + msg;
-    container.appendChild(toast);
-    setTimeout(function() { toast.remove(); }, 3500);
 }
 
-// ── DASHBOARD ────────────────────────────────────────────
+// DASHBOARD
 async function loadDashboard() {
     try {
-        var db = window.db;
-        var ordersRes = await db.from('orders').select('*');
-        var wholesaleRes = await db.from('wholesale_applications').select('*');
-
+        var ordersRes = await window.db.from('orders').select('*');
+        var wholesaleRes = await window.db.from('wholesale_applications').select('*');
         var orders = ordersRes.data || [];
         var wholesale = wholesaleRes.data || [];
 
         var total = orders.length;
-        var pending = orders.filter(function(o) { return o.status === 'pending'; }).length;
-        var revenue = orders.reduce(function(sum, o) { return sum + parseFloat(o.total || 0); }, 0);
-        var wPending = wholesale.filter(function(w) { return w.status === 'pending'; }).length;
+        var pending = orders.filter(function(o){ return o.status==='pending'; }).length;
+        var revenue = orders.reduce(function(s,o){ return s + parseFloat(o.total||0); }, 0);
+        var wPending = wholesale.filter(function(w){ return w.status==='pending'; }).length;
 
-        document.getElementById('stat-total-orders').textContent = total;
-        document.getElementById('stat-pending-orders').textContent = pending;
+        document.getElementById('stat-total').textContent = total;
+        document.getElementById('stat-pending').textContent = pending;
         document.getElementById('stat-revenue').textContent = 'GHS ' + revenue.toFixed(2);
         document.getElementById('stat-wholesale').textContent = wPending;
 
-        var recentEl = document.getElementById('dashboard-recent-orders');
+        var el = document.getElementById('dash-orders');
         if (orders.length === 0) {
-            recentEl.innerHTML = '<p style="color:#64748B;text-align:center;padding:20px;">No orders yet.</p>';
+            el.innerHTML = '<p style="color:#64748B;text-align:center;padding:15px;">No orders yet.</p>';
             return;
         }
-
-        var recent = orders.slice(0, 5);
-        recentEl.innerHTML = '<table class="admin-table"><thead><tr><th>Order ID</th><th>Phone</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody>' +
-            recent.map(function(o) {
-                return '<tr><td>#' + o.id + '</td><td>' + (o.phone||'N/A') + '</td><td>GHS ' + parseFloat(o.total||0).toFixed(2) + '</td><td>' + (o.created_at ? new Date(o.created_at).toLocaleDateString() : 'N/A') + '</td><td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td></tr>';
-            }).join('') +
-        '</tbody></table>';
-
+        var rows = orders.slice(0,5).map(function(o){
+            return '<tr><td>#'+o.id+'</td><td>'+(o.phone||'N/A')+'</td><td>GHS '+parseFloat(o.total||0).toFixed(2)+'</td><td>'+(o.created_at?new Date(o.created_at).toLocaleDateString():'N/A')+'</td><td><span class="status-badge status-'+o.status+'">'+o.status+'</span></td></tr>';
+        }).join('');
+        el.innerHTML = '<table class="admin-table"><thead><tr><th>ID</th><th>Phone</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table>';
     } catch(e) {
-        console.error('Dashboard error:', e);
-        document.getElementById('dashboard-recent-orders').innerHTML = '<p style="color:red;">Error loading data. Check your Supabase key.</p>';
+        document.getElementById('dash-orders').innerHTML = '<p style="color:red;padding:15px;">Error: '+e.message+'</p>';
     }
 }
 
-// ── ORDERS ───────────────────────────────────────────────
+// ORDERS
 async function loadOrders() {
     var el = document.getElementById('orders-content');
     el.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">Loading orders...</p>';
     try {
-        var res = await window.db.from('orders').select('*').order('created_at', { ascending: false });
+        var res = await window.db.from('orders').select('*').order('created_at', {ascending:false});
         var orders = res.data || [];
-
         if (orders.length === 0) {
             el.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">No orders yet.</p>';
             return;
         }
-
-        el.innerHTML = '<table class="admin-table"><thead><tr><th>Order ID</th><th>Phone</th><th>Total</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
-            orders.map(function(o) {
-                return '<tr>' +
-                    '<td>#' + o.id + '</td>' +
-                    '<td>' + (o.phone||'N/A') + '</td>' +
-                    '<td>GHS ' + parseFloat(o.total||0).toFixed(2) + '</td>' +
-                    '<td>' + (o.delivery_location||'N/A') + '</td>' +
-                    '<td>' + (o.created_at ? new Date(o.created_at).toLocaleDateString() : 'N/A') + '</td>' +
-                    '<td><span class="status-badge status-' + o.status + '">' + o.status + '</span></td>' +
-                    '<td><div class="table-actions">' +
-                        (o.status === 'pending' ? '<button class="table-btn table-btn-approve" onclick="approveOrder(' + o.id + ')">Approve</button>' : '') +
-                    '</div></td>' +
-                '</tr>';
-            }).join('') +
-        '</tbody></table>';
-
+        var rows = orders.map(function(o){
+            var approveBtn = o.status==='pending' ? '<button class="table-btn table-btn-approve" onclick="approveOrder('+o.id+')">Approve</button>' : '';
+            return '<tr><td>#'+o.id+'</td><td>'+(o.phone||'N/A')+'</td><td>GHS '+parseFloat(o.total||0).toFixed(2)+'</td><td>'+(o.delivery_location||'N/A')+'</td><td>'+(o.created_at?new Date(o.created_at).toLocaleDateString():'N/A')+'</td><td><span class="status-badge status-'+o.status+'">'+o.status+'</span></td><td>'+approveBtn+'</td></tr>';
+        }).join('');
+        el.innerHTML = '<table class="admin-table"><thead><tr><th>ID</th><th>Phone</th><th>Total</th><th>Location</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows+'</tbody></table>';
     } catch(e) {
-        el.innerHTML = '<p style="color:red;padding:20px;">Error loading orders: ' + e.message + '</p>';
+        el.innerHTML = '<p style="color:red;padding:20px;">Error: '+e.message+'</p>';
     }
 }
 
 async function approveOrder(id) {
-    await window.db.from('orders').update({ status: 'approved' }).eq('id', id);
-    showToast('Order approved!', 'success');
+    await window.db.from('orders').update({status:'approved'}).eq('id', id);
+    showToast('Order approved!','success');
     loadOrders();
     loadDashboard();
 }
 
-// ── PRODUCTS ─────────────────────────────────────────────
+// PRODUCTS
 async function loadProducts() {
     var el = document.getElementById('products-content');
     el.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">Loading products...</p>';
     try {
-        var res = await window.db.from('products').select('*').order('created_at', { ascending: false });
+        var res = await window.db.from('products').select('*').order('created_at',{ascending:false});
         var products = res.data || [];
-
         if (products.length === 0) {
-            el.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">No products yet. Click "Add Product" to start.</p>';
+            el.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">No products yet. Click "Add Product" above.</p>';
             return;
         }
-
-        el.innerHTML = '<table class="admin-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Wholesale</th><th>Origin</th><th>In Stock</th><th>Actions</th></tr></thead><tbody>' +
-            products.map(function(p) {
-                return '<tr>' +
-                    '<td><strong>' + p.name + '</strong></td>' +
-                    '<td>' + (p.category||'-') + '</td>' +
-                    '<td>GHS ' + parseFloat(p.price).toFixed(2) + '</td>' +
-                    '<td>' + (p.wholesale_price ? 'GHS ' + parseFloat(p.wholesale_price).toFixed(2) : '-') + '</td>' +
-                    '<td>' + (p.origin||'-') + '</td>' +
-                    '<td><span class="status-badge ' + (p.in_stock ? 'status-approved' : 'status-rejected') + '">' + (p.in_stock ? 'Yes' : 'No') + '</span></td>' +
-                    '<td><button class="table-btn table-btn-delete" onclick="deleteProduct(' + p.id + ')">Delete</button></td>' +
-                '</tr>';
-            }).join('') +
-        '</tbody></table>';
-
+        var rows = products.map(function(p){
+            return '<tr><td><strong>'+p.name+'</strong></td><td>'+(p.category||'-')+'</td><td>GHS '+parseFloat(p.price).toFixed(2)+'</td><td>'+(p.wholesale_price?'GHS '+parseFloat(p.wholesale_price).toFixed(2):'-')+'</td><td>'+(p.origin||'-')+'</td><td><span class="status-badge '+(p.in_stock?'status-approved':'status-rejected')+'">'+(p.in_stock?'Yes':'No')+'</span></td><td><button class="table-btn table-btn-delete" onclick="deleteProduct('+p.id+')">Delete</button></td></tr>';
+        }).join('');
+        el.innerHTML = '<table class="admin-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Wholesale</th><th>Origin</th><th>In Stock</th><th>Action</th></tr></thead><tbody>'+rows+'</tbody></table>';
     } catch(e) {
-        el.innerHTML = '<p style="color:red;padding:20px;">Error loading products: ' + e.message + '</p>';
+        el.innerHTML = '<p style="color:red;padding:20px;">Error: '+e.message+'</p>';
     }
 }
 
 async function deleteProduct(id) {
     if (!confirm('Delete this product?')) return;
     await window.db.from('products').delete().eq('id', id);
-    showToast('Product deleted.', 'success');
+    showToast('Product deleted.','success');
     loadProducts();
 }
 
-// ── WHOLESALE ────────────────────────────────────────────
+// WHOLESALE
 async function loadWholesale() {
     var el = document.getElementById('wholesale-content');
     el.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">Loading applications...</p>';
     try {
-        var res = await window.db.from('wholesale_applications').select('*').order('created_at', { ascending: false });
+        var res = await window.db.from('wholesale_applications').select('*').order('created_at',{ascending:false});
         var apps = res.data || [];
-
         if (apps.length === 0) {
             el.innerHTML = '<p style="text-align:center;padding:30px;color:#64748B;">No wholesale applications yet.</p>';
             return;
         }
-
-        el.innerHTML = '<table class="admin-table"><thead><tr><th>Business Name</th><th>Phone</th><th>Email</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
-            apps.map(function(a) {
-                return '<tr>' +
-                    '<td><strong>' + (a.business_name||'N/A') + '</strong></td>' +
-                    '<td>' + (a.phone||'N/A') + '</td>' +
-                    '<td>' + (a.email||'N/A') + '</td>' +
-                    '<td>' + (a.location||'N/A') + '</td>' +
-                    '<td><span class="status-badge status-' + a.status + '">' + a.status + '</span></td>' +
-                    '<td><div class="table-actions">' +
-                        (a.status === 'pending' ?
-                            '<button class="table-btn table-btn-approve" onclick="approveWholesale(' + a.id + ')">Approve</button>' +
-                            '<button class="table-btn table-btn-delete" onclick="rejectWholesale(' + a.id + ')">Reject</button>'
-                        : '<span style="color:#64748B;">Processed</span>') +
-                    '</div></td>' +
-                '</tr>';
-            }).join('') +
-        '</tbody></table>';
-
+        var rows = apps.map(function(a){
+            var btns = a.status==='pending'
+                ? '<button class="table-btn table-btn-approve" onclick="approveWholesale('+a.id+')">Approve</button> <button class="table-btn table-btn-delete" onclick="rejectWholesale('+a.id+')">Reject</button>'
+                : '<span style="color:#64748B;font-size:12px;">Processed</span>';
+            return '<tr><td><strong>'+(a.business_name||'N/A')+'</strong></td><td>'+(a.phone||'N/A')+'</td><td>'+(a.email||'N/A')+'</td><td>'+(a.location||'N/A')+'</td><td><span class="status-badge status-'+a.status+'">'+a.status+'</span></td><td>'+btns+'</td></tr>';
+        }).join('');
+        el.innerHTML = '<table class="admin-table"><thead><tr><th>Business</th><th>Phone</th><th>Email</th><th>Location</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows+'</tbody></table>';
     } catch(e) {
-        el.innerHTML = '<p style="color:red;padding:20px;">Error: ' + e.message + '</p>';
+        el.innerHTML = '<p style="color:red;padding:20px;">Error: '+e.message+'</p>';
     }
 }
 
 async function approveWholesale(id) {
-    await window.db.from('wholesale_applications').update({ status: 'approved' }).eq('id', id);
-    showToast('Application approved!', 'success');
+    await window.db.from('wholesale_applications').update({status:'approved'}).eq('id', id);
+    showToast('Application approved!','success');
     loadWholesale();
 }
 
 async function rejectWholesale(id) {
-    await window.db.from('wholesale_applications').update({ status: 'rejected' }).eq('id', id);
-    showToast('Application rejected.', 'success');
+    await window.db.from('wholesale_applications').update({status:'rejected'}).eq('id', id);
+    showToast('Application rejected.','success');
     loadWholesale();
 }
 
-// ── ADD PRODUCT MODAL ────────────────────────────────────
+// ADD PRODUCT MODAL
 function openAddProduct() {
     document.getElementById('add-product-modal').classList.add('active');
 }
 
 function closeAddProduct() {
     document.getElementById('add-product-modal').classList.remove('active');
-    document.getElementById('p-name').value = '';
+    ['p-name','p-price','p-wholesale','p-desc','p-image'].forEach(function(id){
+        document.getElementById(id).value = '';
+    });
     document.getElementById('p-category').value = '';
-    document.getElementById('p-price').value = '';
-    document.getElementById('p-wholesale').value = '';
     document.getElementById('p-origin').value = '';
-    document.getElementById('p-description').value = '';
-    document.getElementById('p-image').value = '';
 }
 
 async function saveProduct() {
@@ -548,41 +448,45 @@ async function saveProduct() {
     var price = document.getElementById('p-price').value;
     var origin = document.getElementById('p-origin').value;
 
-    if (!name) { showToast('Please enter product name!', 'error'); return; }
-    if (!category) { showToast('Please select a category!', 'error'); return; }
-    if (!price) { showToast('Please enter a price!', 'error'); return; }
-    if (!origin) { showToast('Please select origin!', 'error'); return; }
+    if (!name) { showToast('Enter product name!','error'); return; }
+    if (!category) { showToast('Select a category!','error'); return; }
+    if (!price) { showToast('Enter a price!','error'); return; }
+    if (!origin) { showToast('Select origin!','error'); return; }
 
-    var btn = document.getElementById('save-product-btn');
+    var btn = document.getElementById('save-btn');
     btn.textContent = 'Saving...';
     btn.disabled = true;
 
-    var wholesale = document.getElementById('p-wholesale').value;
-    var productData = {
-        name: name,
-        category: category,
-        price: parseFloat(price),
-        wholesale_price: wholesale ? parseFloat(wholesale) : null,
-        origin: origin,
-        description: document.getElementById('p-description').value,
-        image_url: document.getElementById('p-image').value.trim() || null,
-        in_stock: true,
-        featured: false,
-        discount: 0
-    };
-
     try {
-        var res = await window.db.from('products').insert([productData]);
+        var res = await window.db.from('products').insert([{
+            name: name,
+            category: category,
+            price: parseFloat(price),
+            wholesale_price: document.getElementById('p-wholesale').value ? parseFloat(document.getElementById('p-wholesale').value) : null,
+            origin: origin,
+            description: document.getElementById('p-desc').value,
+            image_url: document.getElementById('p-image').value.trim() || null,
+            in_stock: true,
+            featured: false,
+            discount: 0
+        }]);
         if (res.error) throw res.error;
-        showToast('Product added successfully!', 'success');
+        showToast('Product added!','success');
         closeAddProduct();
         loadProducts();
     } catch(e) {
-        showToast('Failed: ' + e.message, 'error');
+        showToast('Failed: ' + e.message,'error');
     }
 
     btn.textContent = 'Add Product';
     btn.disabled = false;
 }
 
-// ── INIT ────────
+// START — wait for window.db before doing anything
+waitForDb(function() {
+    switchSection('dashboard');
+});
+
+</script>
+</body>
+</html>
