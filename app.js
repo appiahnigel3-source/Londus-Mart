@@ -8,16 +8,10 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Make db globally available for admin.html
 window.db = db;
-
-// ============================================
-// FETCH PRODUCTS FROM SUPABASE
-// ============================================
 
 async function fetchProducts(filters = {}) {
     let query = db.from('products').select('*').eq('in_stock', true);
-
     if (filters.category) {
         if (filters.category === 'uk-imports' || filters.category === 'us-imports') {
             query = db.from('products').select('*').eq('in_stock', true)
@@ -26,23 +20,19 @@ async function fetchProducts(filters = {}) {
             query = db.from('products').select('*').eq('in_stock', true).eq('category', filters.category);
         }
     }
-
     if (filters.search) query = query.ilike('name', `%${filters.search}%`);
     if (filters.minPrice) query = query.gte('price', filters.minPrice);
     if (filters.maxPrice) query = query.lte('price', filters.maxPrice);
-
     if (filters.sort === 'price-low') query = query.order('price', { ascending: true });
     else if (filters.sort === 'price-high') query = query.order('price', { ascending: false });
     else if (filters.sort === 'name') query = query.order('name', { ascending: true });
     else query = query.order('created_at', { ascending: false });
-
     const { data, error } = await query;
     if (error) { console.error('Error fetching products:', error); return []; }
     return data || [];
 }
 
 async function fetchFeaturedProducts() {
-    // If no featured products, just get latest 8
     let { data, error } = await db.from('products').select('*').eq('in_stock', true).eq('featured', true).limit(8);
     if (error || !data || data.length === 0) {
         const res = await db.from('products').select('*').eq('in_stock', true).limit(8);
@@ -57,19 +47,11 @@ async function fetchProductById(id) {
     return data;
 }
 
-// ============================================
-// SAVE ORDERS TO SUPABASE
-// ============================================
-
 async function saveOrder(orderData) {
     const { error } = await db.from('orders').insert([orderData]);
     if (error) { console.error('Order error:', error); return false; }
     return true;
 }
-
-// ============================================
-// SAVE WHOLESALE APPLICATION TO SUPABASE
-// ============================================
 
 async function saveWholesaleApplication(appData) {
     const { error } = await db.from('wholesale_applications').insert([appData]);
@@ -77,27 +59,19 @@ async function saveWholesaleApplication(appData) {
     return true;
 }
 
-// ============================================
-// PRODUCT CARD RENDERER — Mobile Friendly
-// ============================================
-
 function buildProductCard(product) {
     const imageUrl = product.image_url || product.image ||
         `https://placehold.co/300x300/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
-
     const price = parseFloat(product.price).toFixed(2);
     const wholesalePrice = product.wholesale_price ? parseFloat(product.wholesale_price).toFixed(2) : null;
     const hasDiscount = product.discount && product.discount > 0;
-    const discountedPrice = hasDiscount
-        ? (product.price * (1 - product.discount / 100)).toFixed(2)
-        : null;
-
+    const discountedPrice = hasDiscount ? (product.price * (1 - product.discount / 100)).toFixed(2) : null;
     const originFlag = product.origin === 'UK' ? '🇬🇧' : product.origin === 'USA' ? '🇺🇸' : '🇬🇭';
 
     return `
         <div class="product-card" data-id="${product.id}" data-category="${product.category}">
             ${hasDiscount ? `<div class="product-badge sale">-${product.discount}%</div>` : ''}
-            <div class="product-image" onclick="viewProduct(${product.id})" style="position:relative;overflow:hidden;aspect-ratio:1/1;">
+            <div class="product-image" onclick="viewProduct(${product.id})" style="position:relative;overflow:hidden;aspect-ratio:1/1;cursor:pointer;">
                 <img
                     src="${imageUrl}"
                     alt="${product.name}"
@@ -105,11 +79,6 @@ function buildProductCard(product) {
                     loading="lazy"
                     style="width:100%;height:100%;object-fit:cover;display:block;"
                 >
-                <div class="product-overlay">
-                    <button class="overlay-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
-                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                    </button>
-                </div>
             </div>
             <div class="product-info" style="padding:12px;">
                 <div class="product-origin" style="font-size:12px;color:#64748B;margin-bottom:4px;">${originFlag} ${product.origin || ''}</div>
@@ -133,27 +102,17 @@ function buildProductCard(product) {
     `;
 }
 
-// ============================================
-// PAGE: HOME — Featured Products
-// ============================================
-
 async function initHomePage() {
     const grid = document.querySelector('.products .products-grid');
     if (!grid) return;
-
     grid.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Loading products...</div>';
     const products = await fetchFeaturedProducts();
-
     if (products.length === 0) {
-        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">No products yet. Add some in Supabase!</p>';
+        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">No products yet.</p>';
         return;
     }
     grid.innerHTML = products.map(buildProductCard).join('');
 }
-
-// ============================================
-// PAGE: SHOP — All Products with Filters
-// ============================================
 
 let currentFilters = {};
 
@@ -165,12 +124,9 @@ async function renderShopProducts() {
     const grid = document.querySelector('.shop-main .products-grid');
     const countEl = document.querySelector('.products-count');
     if (!grid) return;
-
     grid.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Loading products...</div>';
     const products = await fetchProducts(currentFilters);
-
     if (countEl) countEl.textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
-
     if (products.length === 0) {
         grid.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">No products found.</p>';
         return;
@@ -184,7 +140,6 @@ async function filterProducts() {
     const maxPrice = document.getElementById('price-max');
     const checkedCategories = [...document.querySelectorAll('.shop-sidebar input[type="checkbox"]:checked')]
         .map(cb => cb.value).filter(v => v && v !== 'on');
-
     currentFilters = {
         search: searchInput?.value || '',
         minPrice: minPrice?.value || null,
@@ -192,7 +147,6 @@ async function filterProducts() {
         category: checkedCategories.length === 1 ? checkedCategories[0] : null,
         sort: document.querySelector('.sort-select')?.value || 'default'
     };
-
     await renderShopProducts();
 }
 
@@ -201,35 +155,24 @@ async function sortProducts(value) {
     await renderShopProducts();
 }
 
-// ============================================
-// PAGE: PRODUCT DETAILS
-// ============================================
-
 async function initProductPage() {
     const params = new URLSearchParams(window.location.search);
     const productId = params.get('id');
     if (!productId) { window.location.href = 'shop.html'; return; }
-
     const product = await fetchProductById(productId);
     if (!product) { window.location.href = 'shop.html'; return; }
-
     const imageUrl = product.image_url || product.image ||
         `https://placehold.co/600x600/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
-
     const mainImg = document.querySelector('.main-image img');
     if (mainImg) { mainImg.src = imageUrl; mainImg.alt = product.name; }
-
     document.title = `${product.name} - Londus Mart`;
-
     const infoContainer = document.querySelector('.product-details-info');
     if (!infoContainer) return;
-
     const originFlag = product.origin === 'UK' ? '🇬🇧' : product.origin === 'USA' ? '🇺🇸' : '🇬🇭';
     const hasDiscount = product.discount && product.discount > 0;
     const discountedPrice = hasDiscount
         ? (product.price * (1 - product.discount / 100)).toFixed(2)
         : parseFloat(product.price).toFixed(2);
-
     infoContainer.innerHTML = `
         <div style="font-size:13px;color:#64748B;margin-bottom:8px;">${originFlag} ${product.origin || ''} Import</div>
         <h1 style="font-size:28px;color:#1E3A8A;margin-bottom:15px;">${product.name}</h1>
@@ -254,8 +197,6 @@ async function initProductPage() {
             <a href="shop.html" class="btn btn-outline">← Back to Shop</a>
         </div>
     `;
-
-    // Load related products
     const relatedGrid = document.querySelector('.products .products-grid');
     if (relatedGrid && product.category) {
         const related = await fetchProducts({ category: product.category });
@@ -266,18 +207,11 @@ async function initProductPage() {
     }
 }
 
-// ============================================
-// CART FUNCTIONS
-// ============================================
-
 function addToCart(productId) {
     let cart = JSON.parse(localStorage.getItem('londusCart')) || [];
     const existing = cart.find(i => i.id == productId);
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({ id: productId, quantity: 1 });
-    }
+    if (existing) { existing.quantity += 1; }
+    else { cart.push({ id: productId, quantity: 1 }); }
     localStorage.setItem('londusCart', JSON.stringify(cart));
     updateCartBadge();
     showToast('Added to cart!', 'success');
@@ -287,11 +221,8 @@ function addToCartFromDetails(productId) {
     const qty = parseInt(document.getElementById('qty-display')?.textContent) || 1;
     let cart = JSON.parse(localStorage.getItem('londusCart')) || [];
     const existing = cart.find(i => i.id == productId);
-    if (existing) {
-        existing.quantity += qty;
-    } else {
-        cart.push({ id: productId, quantity: qty });
-    }
+    if (existing) { existing.quantity += qty; }
+    else { cart.push({ id: productId, quantity: qty }); }
     localStorage.setItem('londusCart', JSON.stringify(cart));
     updateCartBadge();
     showToast(`${qty} item(s) added to cart!`, 'success');
@@ -314,18 +245,12 @@ function updateCartBadge() {
     });
 }
 
-// ============================================
-// PAGE: CART
-// ============================================
-
 async function renderCart() {
     const container = document.querySelector('.cart-items-container');
     const subtotalEl = document.querySelector('.summary-subtotal');
     const totalEl = document.querySelector('.total-amount');
     if (!container) return;
-
     let cart = JSON.parse(localStorage.getItem('londusCart')) || [];
-
     if (cart.length === 0) {
         container.innerHTML = `
             <div style="text-align:center;padding:60px;">
@@ -337,26 +262,18 @@ async function renderCart() {
         if (totalEl) totalEl.textContent = 'GHS 0.00';
         return;
     }
-
     container.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Loading cart...</div>';
-
-    const productPromises = cart.map(item => fetchProductById(item.id));
-    const productDetails = await Promise.all(productPromises);
-
+    const productDetails = await Promise.all(cart.map(item => fetchProductById(item.id)));
     let subtotal = 0;
     let html = '';
-
     cart.forEach((item, index) => {
         const product = productDetails[index];
         if (!product) return;
-
         const price = parseFloat(product.price);
         const lineTotal = price * item.quantity;
         subtotal += lineTotal;
-
         const imageUrl = product.image_url || product.image ||
             `https://placehold.co/80x80/1E3A8A/FFFFFF?text=${encodeURIComponent(product.name)}`;
-
         html += `
             <div style="display:flex;align-items:center;gap:15px;padding:15px;border-bottom:1px solid #f1f5f9;flex-wrap:wrap;">
                 <img src="${imageUrl}" alt="${product.name}"
@@ -377,9 +294,7 @@ async function renderCart() {
                 <div style="font-weight:600;color:#1E3A8A;min-width:80px;text-align:right;">GHS ${lineTotal.toFixed(2)}</div>
             </div>`;
     });
-
     container.innerHTML = html;
-
     if (subtotalEl) subtotalEl.textContent = `GHS ${subtotal.toFixed(2)}`;
     if (totalEl) totalEl.textContent = `GHS ${subtotal.toFixed(2)}`;
 }
@@ -405,28 +320,20 @@ function updateCartQuantity(productId, change) {
     renderCart();
 }
 
-// ============================================
-// CHECKOUT
-// ============================================
-
 async function handleCheckout(event) {
     event.preventDefault();
     const cart = JSON.parse(localStorage.getItem('londusCart')) || [];
     if (cart.length === 0) { showToast('Your cart is empty!', 'error'); return; }
-
     const locationEl = document.getElementById('delivery-location');
     const addressEl = document.querySelector('.checkout-form input[type="text"]');
     const phoneEl = document.querySelector('.checkout-form input[type="tel"]');
     const paymentEl = document.querySelector('input[name="payment"]:checked');
-
     if (!locationEl?.value) { showToast('Please select a delivery location!', 'error'); return; }
     if (!addressEl?.value) { showToast('Please enter your delivery address!', 'error'); return; }
     if (!phoneEl?.value) { showToast('Please enter your phone number!', 'error'); return; }
     if (!paymentEl) { showToast('Please select a payment method!', 'error'); return; }
-
     const subtotalEl = document.querySelector('.summary-subtotal');
     const total = subtotalEl ? parseFloat(subtotalEl.textContent.replace('GHS ', '')) : 0;
-
     const orderData = {
         items: cart,
         total: total,
@@ -436,12 +343,9 @@ async function handleCheckout(event) {
         payment_method: paymentEl.value,
         status: 'pending'
     };
-
     const btn = document.querySelector('.btn-checkout');
     if (btn) { btn.textContent = 'Placing Order...'; btn.disabled = true; }
-
     const success = await saveOrder(orderData);
-
     if (success) {
         localStorage.removeItem('londusCart');
         updateCartBadge();
@@ -453,15 +357,10 @@ async function handleCheckout(event) {
     }
 }
 
-// ============================================
-// WHOLESALE
-// ============================================
-
 async function handleWholesaleSubmit(event) {
     event.preventDefault();
     const form = event.target;
     const btn = form.querySelector('.form-submit');
-
     const appData = {
         business_name: form.querySelector('[name="business-name"]')?.value,
         phone: form.querySelector('[name="phone"]')?.value,
@@ -471,24 +370,16 @@ async function handleWholesaleSubmit(event) {
         description: form.querySelector('[name="description"]')?.value,
         status: 'pending'
     };
-
     if (btn) { btn.textContent = 'Submitting...'; btn.disabled = true; }
-
     const success = await saveWholesaleApplication(appData);
-
     if (success) {
         showToast('Application submitted! We will contact you within 48 hours.', 'success');
         form.reset();
     } else {
         showToast('Submission failed. Please try again.', 'error');
     }
-
     if (btn) { btn.textContent = 'Submit Application'; btn.disabled = false; }
 }
-
-// ============================================
-// UTILITIES
-// ============================================
 
 function showToast(message, type = 'success') {
     let container = document.querySelector('.toast-container');
@@ -507,9 +398,7 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.remove(), 3500);
 }
 
-function viewProduct(id) {
-    window.location.href = `product.html?id=${id}`;
-}
+function viewProduct(id) { window.location.href = `product.html?id=${id}`; }
 
 function toggleMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
@@ -526,30 +415,19 @@ function toggleSearch() {
     else showToast('Use the search bar in the Shop page!', 'success');
 }
 
-// ============================================
-// INITIALIZE
-// ============================================
-
 document.addEventListener('DOMContentLoaded', () => {
     updateCartBadge();
-
     const page = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
-
-    if (page === '' || page === 'index') {
-        initHomePage();
-    } else if (page === 'shop') {
+    if (page === '' || page === 'index') { initHomePage(); }
+    else if (page === 'shop') {
         const params = new URLSearchParams(window.location.search);
         const cat = params.get('category');
         if (cat) currentFilters.category = cat;
         initShopPage();
-    } else if (page === 'product') {
-        initProductPage();
-    } else if (page === 'cart') {
-        renderCart();
-    }
+    } else if (page === 'product') { initProductPage(); }
+    else if (page === 'cart') { renderCart(); }
 });
 
-// Expose globally
 window.addToCart = addToCart;
 window.addToCartFromDetails = addToCartFromDetails;
 window.removeFromCart = removeFromCart;
