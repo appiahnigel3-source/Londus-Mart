@@ -377,6 +377,21 @@ async function approveOrder(id) {
     loadDashboard();
 }
 
+async function deliverOrder(id) {
+    await window.db.from('orders').update({status:'delivered'}).eq('id', id);
+    showToast('🚚 Order marked as delivered!','success');
+    loadOrders();
+    loadDashboard();
+}
+
+async function rejectOrder(id) {
+    if (!confirm('Are you sure you want to reject this order?')) return;
+    await window.db.from('orders').update({status:'rejected'}).eq('id', id);
+    showToast('Order rejected.','success');
+    loadOrders();
+    loadDashboard();
+}
+
 // PRODUCTS
 async function loadProducts() {
     var el = document.getElementById('products-content');
