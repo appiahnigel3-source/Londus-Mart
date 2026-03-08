@@ -3,7 +3,7 @@
    ============================================ */
 
 const SUPABASE_URL = "https://dwjkusopxpnrmrphdjwh.supabase.co";
-const SUPABASE_KEY = "YOUR_ANON_PUBLIC_KEY"; // ← REPLACE WITH YOUR REAL KEY
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3amt1c29weHBucm1ycGhkandoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MDE3MjIsImV4cCI6MjA4ODM3NzcyMn0.O1cExLNIo1BjSYzJA6CA34GDzCqEB9sMtZf3onZpkMQ"; // ← REPLACE WITH YOUR REAL KEY
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
