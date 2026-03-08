@@ -66,7 +66,7 @@
             <div class="container">
                 <div class="header-contact">
                     <span><i class="fas fa-phone"></i> 0550078704</span>
-                    <span><i class="fas fa-envelope"></i> info@londusmart.com</span>
+                    <span><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="97fef9f1f8d7fbf8f9f3e2e4faf6e5e3b9f4f8fa">[email&#160;protected]</a></span>
                     <span><i class="fas fa-map-marker-alt"></i> Accra, Ghana</span>
                 </div>
             </div>
@@ -171,6 +171,7 @@
                     <div id="section-orders" class="section-hidden">
                         <div class="admin-header">
                             <h2 class="admin-title">Orders Management</h2>
+                            <button class="btn btn-outline" onclick="loadOrders()" style="margin-left:auto;"><i class="fas fa-sync"></i> Refresh</button>
                         </div>
                         <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.08);">
                             <div id="orders-content" style="padding:20px;">Loading...</div>
@@ -298,7 +299,7 @@
         </div>
     </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 <script>
 
@@ -584,11 +585,4 @@ async function saveProduct() {
     btn.disabled = false;
 }
 
-// ── INIT ─────────────────────────────────────────────────
-window.addEventListener('load', function() {
-    switchSection('dashboard');
-});
-
-</script>
-</body>
-</html>
+// ── INIT ────────
